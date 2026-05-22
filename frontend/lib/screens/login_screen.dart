@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'farmer_dashboard.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -50,6 +52,7 @@ class LoginScreen extends StatelessWidget {
 
             TextField(
               obscureText: true,
+
               decoration: InputDecoration(
                 labelText: "Password",
                 border: OutlineInputBorder(),
@@ -62,7 +65,16 @@ class LoginScreen extends StatelessWidget {
               width: double.infinity,
 
               child: ElevatedButton(
+
                 onPressed: () {
+
+                  Navigator.push(
+                    context,
+
+                    MaterialPageRoute(
+                      builder: (context) => const FarmerDashboard(),
+                    ),
+                  );
 
                 },
 
@@ -73,6 +85,7 @@ class LoginScreen extends StatelessWidget {
 
                 child: const Text(
                   "Login",
+
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,
