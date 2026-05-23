@@ -3,6 +3,7 @@ import 'login_screen.dart';
 import 'weather_screen.dart';
 import 'marketplace_screen.dart';
 import 'chatbot_screen.dart';
+import 'crop_recommendation_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -73,9 +74,25 @@ class FarmerDashboard extends StatelessWidget {
 
                 children: [
 
-                  dashboardCard(
-                    Icons.agriculture,
-                    "Crop Recommendation",
+                  GestureDetector(
+
+                    onTap: () {
+
+                      Navigator.push(
+                        context,
+
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const CropRecommendationScreen(),
+                        ),
+                      );
+
+                    },
+
+                    child: dashboardCard(
+                      Icons.agriculture,
+                      "Crop Recommendation",
+                    ),
                   ),
 
                   GestureDetector(
@@ -86,7 +103,8 @@ class FarmerDashboard extends StatelessWidget {
                         context,
 
                         MaterialPageRoute(
-                          builder: (context) => const WeatherScreen(),
+                          builder: (context) =>
+                              const WeatherScreen(),
                         ),
                       );
 
@@ -106,7 +124,8 @@ class FarmerDashboard extends StatelessWidget {
                         context,
 
                         MaterialPageRoute(
-                          builder: (context) => const MarketplaceScreen(),
+                          builder: (context) =>
+                              const MarketplaceScreen(),
                         ),
                       );
 
@@ -126,7 +145,8 @@ class FarmerDashboard extends StatelessWidget {
                         context,
 
                         MaterialPageRoute(
-                          builder: (context) => const ChatbotScreen(),
+                          builder: (context) =>
+                              const ChatbotScreen(),
                         ),
                       );
 
