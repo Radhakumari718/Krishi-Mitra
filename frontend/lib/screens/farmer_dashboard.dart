@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'weather_screen.dart';
 import 'marketplace_screen.dart';
+import 'chatbot_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -117,9 +118,24 @@ class FarmerDashboard extends StatelessWidget {
                     ),
                   ),
 
-                  dashboardCard(
-                    Icons.chat,
-                    "AI Chatbot",
+                  GestureDetector(
+
+                    onTap: () {
+
+                      Navigator.push(
+                        context,
+
+                        MaterialPageRoute(
+                          builder: (context) => const ChatbotScreen(),
+                        ),
+                      );
+
+                    },
+
+                    child: dashboardCard(
+                      Icons.chat,
+                      "AI Chatbot",
+                    ),
                   ),
 
                 ],
