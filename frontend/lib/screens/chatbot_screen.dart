@@ -4,33 +4,63 @@ class ChatbotScreen extends StatefulWidget {
   const ChatbotScreen({super.key});
 
   @override
-  State<ChatbotScreen> createState() => _ChatbotScreenState();
+  State<ChatbotScreen> createState() =>
+      _ChatbotScreenState();
 }
 
-class _ChatbotScreenState extends State<ChatbotScreen> {
+class _ChatbotScreenState
+    extends State<ChatbotScreen> {
 
   final TextEditingController messageController =
       TextEditingController();
 
-  List<String> messages = [];
+  List<Map<String, String>> messages = [];
 
   void sendMessage() {
 
-    if (messageController.text.isNotEmpty) {
+    String userMessage =
+        messageController.text.trim();
 
-      setState(() {
+    if (userMessage.isEmpty) return;
 
-        messages.add(
-          "Farmer: ${messageController.text}",
-        );
+    setState(() {
 
-        messages.add(
-          "AI: कृषि मित्र is analyzing your question...",
-        );
-
+      messages.add({
+        "sender": "user",
+        "message": userMessage,
       });
 
-      messageController.clear();
+      String botReply = getBotReply(userMessage);
+
+      messages.add({
+        "sender": "bot",
+        "message": botReply,
+      });
+
+    });
+
+    messageController.clear();
+  }
+
+  String getBotReply(String message) {
+
+    message = message.toLowerCase();
+
+    if (message.contains("rice")) {
+
+      return "Rice grows well in wet and humid climate.";
+
+    } else if (message.contains("fertilizer")) {
+
+      return "Organic fertilizers improve soil fertility.";
+
+    } else if (message.contains("weather")) {
+
+      return "Check weather alerts regularly before irrigation.";
+
+    } else {
+
+      return "I am your farming assistant 🌾";
     }
   }
 
@@ -52,24 +82,51 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
             child: ListView.builder(
 
+              padding: const EdgeInsets.all(12),
+
               itemCount: messages.length,
 
               itemBuilder: (context, index) {
 
-                return Padding(
-                  padding: const EdgeInsets.all(10),
+                final message = messages[index];
+
+                bool isUser =
+                    message["sender"] == "user";
+
+                return Align(
+
+                  alignment: isUser
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
 
                   child: Container(
-                    padding: const EdgeInsets.all(15),
+
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 6,
+                    ),
+
+                    padding: const EdgeInsets.all(14),
 
                     decoration: BoxDecoration(
-                      color: Colors.green.shade100,
-                      borderRadius: BorderRadius.circular(10),
+
+                      color: isUser
+                          ? Colors.green
+                          : Colors.grey.shade300,
+
+                      borderRadius:
+                          BorderRadius.circular(15),
                     ),
 
                     child: Text(
-                      messages[index],
-                      style: const TextStyle(
+
+                      message["message"]!,
+
+                      style: TextStyle(
+
+                        color: isUser
+                            ? Colors.white
+                            : Colors.black,
+
                         fontSize: 16,
                       ),
                     ),
@@ -79,7 +136,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             ),
           ),
 
-          Padding(
+          Container(
+
             padding: const EdgeInsets.all(10),
 
             child: Row(
@@ -87,31 +145,44 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               children: [
 
                 Expanded(
+
                   child: TextField(
                     controller: messageController,
 
                     decoration: InputDecoration(
-                      hintText: "Ask farming question...",
-                      border: OutlineInputBorder(),
+
+                      hintText:
+                          "Ask farming questions...",
+
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
 
                 const SizedBox(width: 10),
 
-                IconButton(
-                  onPressed: sendMessage,
+                CircleAvatar(
 
-                  icon: const Icon(
-                    Icons.send,
-                    color: Colors.green,
-                    size: 30,
+                  backgroundColor: Colors.green,
+
+                  child: IconButton(
+
+                    onPressed: sendMessage,
+
+                    icon: const Icon(
+                      Icons.send,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
 
               ],
             ),
           ),
+
         ],
       ),
     );
