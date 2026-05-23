@@ -4,6 +4,7 @@ import 'weather_screen.dart';
 import 'marketplace_screen.dart';
 import 'chatbot_screen.dart';
 import 'crop_recommendation_screen.dart';
+import 'profile_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -20,6 +21,24 @@ class FarmerDashboard extends StatelessWidget {
         actions: [
 
           IconButton(
+
+            icon: const Icon(Icons.person),
+
+            onPressed: () {
+
+              Navigator.push(
+                context,
+
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const ProfileScreen(),
+                ),
+              );
+
+            },
+          ),
+
+          IconButton(
             icon: const Icon(Icons.logout),
 
             onPressed: () {
@@ -27,7 +46,8 @@ class FarmerDashboard extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const LoginScreen(),
+                  builder: (context) =>
+                      const LoginScreen(),
                 ),
               );
 
@@ -167,7 +187,10 @@ class FarmerDashboard extends StatelessWidget {
     );
   }
 
-  Widget dashboardCard(IconData icon, String title) {
+  Widget dashboardCard(
+    IconData icon,
+    String title,
+  ) {
 
     return Card(
       elevation: 5,
