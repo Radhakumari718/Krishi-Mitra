@@ -8,6 +8,7 @@ import 'profile_screen.dart';
 import 'notification_screen.dart';
 import 'language_screen.dart';
 import 'price_prediction_screen.dart';
+import 'disease_detection_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -235,6 +236,27 @@ class FarmerDashboard extends StatelessWidget {
                     child: dashboardCard(
                       Icons.show_chart,
                       "Price Prediction",
+                    ),
+                  ),
+
+                  GestureDetector(
+
+                    onTap: () {
+
+                      Navigator.push(
+                        context,
+
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const DiseaseDetectionScreen(),
+                        ),
+                      );
+
+                    },
+
+                    child: dashboardCard(
+                      Icons.health_and_safety,
+                      "Disease Detection",
                     ),
                   ),
 
