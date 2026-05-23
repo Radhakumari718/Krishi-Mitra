@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DiseaseDetectionScreen extends StatefulWidget {
   const DiseaseDetectionScreen({super.key});
@@ -17,8 +20,27 @@ class _DiseaseDetectionScreenState
   final TextEditingController symptomController =
       TextEditingController();
 
+  File? selectedImage;
+
   String result = "";
   String solution = "";
+
+  Future<void> pickImage() async {
+
+    final pickedFile =
+        await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+
+      setState(() {
+
+        selectedImage = File(pickedFile.path);
+
+      });
+    }
+  }
 
   void detectDisease() {
 
@@ -62,7 +84,8 @@ class _DiseaseDetectionScreenState
         backgroundColor: Colors.green,
       ),
 
-      body: Padding(
+      body: SingleChildScrollView(
+
         padding: const EdgeInsets.all(20),
 
         child: Column(
@@ -89,23 +112,75 @@ class _DiseaseDetectionScreenState
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
+
+            selectedImage != null
+
+                ? ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(12),
+
+                    child: Image.file(
+                      selectedImage!,
+                      height: 220,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+
+                : Container(
+                    height: 220,
+                    width: double.infinity,
+
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(12),
+
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                    ),
+
+                    child: const Center(
+                      child: Text(
+                        "No Image Selected",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+
+            const SizedBox(height: 20),
+
+            SizedBox(
+              width: double.infinity,
+
+              child: ElevatedButton.icon(
+
+                onPressed: pickImage,
+
+                icon: const Icon(Icons.image),
+
+                label: const Text(
+                  "Upload Crop Image",
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
 
             SizedBox(
               width: double.infinity,
 
               child: ElevatedButton(
-                onPressed: detectDisease,
 
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.all(15),
-                ),
+                onPressed: detectDisease,
 
                 child: const Text(
                   "Detect Disease",
+
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 18,
                   ),
                 ),
@@ -117,6 +192,8 @@ class _DiseaseDetectionScreenState
             Text(
               result,
 
+              textAlign: TextAlign.center,
+
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -124,10 +201,11 @@ class _DiseaseDetectionScreenState
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             Text(
               solution,
+              textAlign: TextAlign.center,
 
               style: const TextStyle(
                 fontSize: 18,
