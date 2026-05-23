@@ -7,6 +7,7 @@ import 'crop_recommendation_screen.dart';
 import 'profile_screen.dart';
 import 'notification_screen.dart';
 import 'language_screen.dart';
+import 'price_prediction_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -213,6 +214,27 @@ class FarmerDashboard extends StatelessWidget {
                     child: dashboardCard(
                       Icons.chat,
                       "AI Chatbot",
+                    ),
+                  ),
+
+                  GestureDetector(
+
+                    onTap: () {
+
+                      Navigator.push(
+                        context,
+
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const PricePredictionScreen(),
+                        ),
+                      );
+
+                    },
+
+                    child: dashboardCard(
+                      Icons.show_chart,
+                      "Price Prediction",
                     ),
                   ),
 
