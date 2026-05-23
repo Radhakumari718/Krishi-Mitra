@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
-import 'farmer_dashboard.dart';
 
-class LoginScreen extends StatelessWidget {
+import 'bottom_nav_screen.dart';
+
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() =>
+      _LoginScreenState();
+}
+
+class _LoginScreenState
+    extends State<LoginScreen> {
+
+  final TextEditingController emailController =
+      TextEditingController();
+
+  final TextEditingController passwordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Colors.white,
 
       appBar: AppBar(
-        title: const Text('Krishi Mithra'),
+        title: const Text("Login"),
         backgroundColor: Colors.green,
       ),
 
@@ -19,6 +33,7 @@ class LoginScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
 
         child: Column(
+
           mainAxisAlignment: MainAxisAlignment.center,
 
           children: [
@@ -29,20 +44,12 @@ class LoginScreen extends StatelessWidget {
               color: Colors.green,
             ),
 
-            const SizedBox(height: 20),
-
-            const Text(
-              "Welcome",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
             const SizedBox(height: 30),
 
             TextField(
-              decoration: InputDecoration(
+              controller: emailController,
+
+              decoration: const InputDecoration(
                 labelText: "Email",
                 border: OutlineInputBorder(),
               ),
@@ -51,9 +58,10 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             TextField(
+              controller: passwordController,
               obscureText: true,
 
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Password",
                 border: OutlineInputBorder(),
               ),
@@ -68,11 +76,12 @@ class LoginScreen extends StatelessWidget {
 
                 onPressed: () {
 
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
 
                     MaterialPageRoute(
-                      builder: (context) => const FarmerDashboard(),
+                      builder: (context) =>
+                          const BottomNavScreen(),
                     ),
                   );
 
@@ -85,14 +94,14 @@ class LoginScreen extends StatelessWidget {
 
                 child: const Text(
                   "Login",
-
                   style: TextStyle(
-                    fontSize: 18,
                     color: Colors.white,
+                    fontSize: 18,
                   ),
                 ),
               ),
             ),
+
           ],
         ),
       ),
