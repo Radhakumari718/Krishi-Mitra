@@ -19,13 +19,11 @@ class FarmerDashboard extends StatelessWidget {
     return Scaffold(
 
       appBar: AppBar(
-        title: const Text("Farmer Dashboard"),
-        backgroundColor: Colors.green,
+        title: const Text("Krishi Mithra"),
 
         actions: [
 
           IconButton(
-
             icon: const Icon(Icons.language),
 
             onPressed: () {
@@ -43,7 +41,6 @@ class FarmerDashboard extends StatelessWidget {
           ),
 
           IconButton(
-
             icon: const Icon(Icons.notifications),
 
             onPressed: () {
@@ -61,7 +58,6 @@ class FarmerDashboard extends StatelessWidget {
           ),
 
           IconButton(
-
             icon: const Icon(Icons.person),
 
             onPressed: () {
@@ -85,6 +81,7 @@ class FarmerDashboard extends StatelessWidget {
 
               Navigator.pushReplacement(
                 context,
+
                 MaterialPageRoute(
                   builder: (context) =>
                       const LoginScreen(),
@@ -109,155 +106,73 @@ class FarmerDashboard extends StatelessWidget {
             const Text(
               "Welcome Farmer 👨‍🌾",
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
+                color: Colors.green,
               ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
 
             const Text(
-              "Manage your farming smartly",
+              "Smart Farming Assistant",
               style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
+                fontSize: 18,
+                color: Colors.black54,
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
             Expanded(
               child: GridView.count(
+
                 crossAxisCount: 2,
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
 
                 children: [
 
-                  GestureDetector(
-
-                    onTap: () {
-
-                      Navigator.push(
-                        context,
-
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const CropRecommendationScreen(),
-                        ),
-                      );
-
-                    },
-
-                    child: dashboardCard(
-                      Icons.agriculture,
-                      "Crop Recommendation",
-                    ),
+                  dashboardItem(
+                    context,
+                    Icons.agriculture,
+                    "Crop\nRecommendation",
+                    const CropRecommendationScreen(),
                   ),
 
-                  GestureDetector(
-
-                    onTap: () {
-
-                      Navigator.push(
-                        context,
-
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const WeatherScreen(),
-                        ),
-                      );
-
-                    },
-
-                    child: dashboardCard(
-                      Icons.cloud,
-                      "Weather Alerts",
-                    ),
+                  dashboardItem(
+                    context,
+                    Icons.cloud,
+                    "Weather\nAlerts",
+                    const WeatherScreen(),
                   ),
 
-                  GestureDetector(
-
-                    onTap: () {
-
-                      Navigator.push(
-                        context,
-
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const MarketplaceScreen(),
-                        ),
-                      );
-
-                    },
-
-                    child: dashboardCard(
-                      Icons.store,
-                      "Marketplace",
-                    ),
+                  dashboardItem(
+                    context,
+                    Icons.store,
+                    "Marketplace",
+                    const MarketplaceScreen(),
                   ),
 
-                  GestureDetector(
-
-                    onTap: () {
-
-                      Navigator.push(
-                        context,
-
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const ChatbotScreen(),
-                        ),
-                      );
-
-                    },
-
-                    child: dashboardCard(
-                      Icons.chat,
-                      "AI Chatbot",
-                    ),
+                  dashboardItem(
+                    context,
+                    Icons.chat,
+                    "AI\nChatbot",
+                    const ChatbotScreen(),
                   ),
 
-                  GestureDetector(
-
-                    onTap: () {
-
-                      Navigator.push(
-                        context,
-
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const PricePredictionScreen(),
-                        ),
-                      );
-
-                    },
-
-                    child: dashboardCard(
-                      Icons.show_chart,
-                      "Price Prediction",
-                    ),
+                  dashboardItem(
+                    context,
+                    Icons.show_chart,
+                    "Price\nPrediction",
+                    const PricePredictionScreen(),
                   ),
 
-                  GestureDetector(
-
-                    onTap: () {
-
-                      Navigator.push(
-                        context,
-
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const DiseaseDetectionScreen(),
-                        ),
-                      );
-
-                    },
-
-                    child: dashboardCard(
-                      Icons.health_and_safety,
-                      "Disease Detection",
-                    ),
+                  dashboardItem(
+                    context,
+                    Icons.health_and_safety,
+                    "Disease\nDetection",
+                    const DiseaseDetectionScreen(),
                   ),
 
                 ],
@@ -269,37 +184,72 @@ class FarmerDashboard extends StatelessWidget {
     );
   }
 
-  Widget dashboardCard(
+  Widget dashboardItem(
+    BuildContext context,
     IconData icon,
     String title,
+    Widget screen,
   ) {
 
-    return Card(
-      elevation: 5,
+    return GestureDetector(
 
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      onTap: () {
 
-        children: [
+        Navigator.push(
+          context,
 
-          Icon(
-            icon,
-            size: 50,
-            color: Colors.green,
+          MaterialPageRoute(
+            builder: (context) => screen,
           ),
+        );
 
-          const SizedBox(height: 10),
+      },
 
-          Text(
-            title,
-            textAlign: TextAlign.center,
+      child: Card(
 
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+        child: Container(
+
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            gradient: LinearGradient(
+
+              colors: [
+                Colors.green.shade400,
+                Colors.green.shade700,
+              ],
+
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
-        ],
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+
+            children: [
+
+              Icon(
+                icon,
+                size: 50,
+                color: Colors.white,
+              ),
+
+              const SizedBox(height: 15),
+
+              Text(
+                title,
+                textAlign: TextAlign.center,
+
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+
+            ],
+          ),
+        ),
       ),
     );
   }
