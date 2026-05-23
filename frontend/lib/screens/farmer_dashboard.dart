@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'weather_screen.dart';
+import 'marketplace_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -96,9 +97,24 @@ class FarmerDashboard extends StatelessWidget {
                     ),
                   ),
 
-                  dashboardCard(
-                    Icons.store,
-                    "Marketplace",
+                  GestureDetector(
+
+                    onTap: () {
+
+                      Navigator.push(
+                        context,
+
+                        MaterialPageRoute(
+                          builder: (context) => const MarketplaceScreen(),
+                        ),
+                      );
+
+                    },
+
+                    child: dashboardCard(
+                      Icons.store,
+                      "Marketplace",
+                    ),
                   ),
 
                   dashboardCard(
