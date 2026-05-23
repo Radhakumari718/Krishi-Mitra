@@ -5,6 +5,7 @@ import 'marketplace_screen.dart';
 import 'chatbot_screen.dart';
 import 'crop_recommendation_screen.dart';
 import 'profile_screen.dart';
+import 'notification_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -19,6 +20,24 @@ class FarmerDashboard extends StatelessWidget {
         backgroundColor: Colors.green,
 
         actions: [
+
+          IconButton(
+
+            icon: const Icon(Icons.notifications),
+
+            onPressed: () {
+
+              Navigator.push(
+                context,
+
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const NotificationScreen(),
+                ),
+              );
+
+            },
+          ),
 
           IconButton(
 
