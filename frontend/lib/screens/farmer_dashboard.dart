@@ -13,6 +13,7 @@ import 'disease_detection_screen.dart';
 import 'tips_screen.dart';
 import 'schemes_screen.dart';
 import 'soil_screen.dart';
+import 'help_support_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -200,6 +201,13 @@ class FarmerDashboard extends StatelessWidget {
                     Icons.landscape,
                     "Soil\nInformation",
                     const SoilScreen(),
+                  ),
+
+                  dashboardItem(
+                    context,
+                    Icons.support_agent,
+                    "Help &\nSupport",
+                    const HelpSupportScreen(),
                   ),
 
                 ],
