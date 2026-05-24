@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
-class CropRecommendationScreen extends StatefulWidget {
-  const CropRecommendationScreen({super.key});
+class CropRecommendationScreen
+    extends StatefulWidget {
+
+  const CropRecommendationScreen({
+    super.key,
+  });
 
   @override
-  State<CropRecommendationScreen> createState() =>
-      _CropRecommendationScreenState();
+  State<CropRecommendationScreen>
+      createState() =>
+          _CropRecommendationScreenState();
 }
 
 class _CropRecommendationScreenState
@@ -24,24 +29,36 @@ class _CropRecommendationScreenState
 
   void recommendCrop() {
 
-    String soil = soilController.text.toLowerCase();
-    String season = seasonController.text.toLowerCase();
-    String water = waterController.text.toLowerCase();
+    String soil =
+        soilController.text.toLowerCase();
 
-    if (soil == "black" &&
-        season == "winter" &&
-        water == "high") {
+    String season =
+        seasonController.text.toLowerCase();
 
-      result = "Recommended Crop: Wheat";
+    String water =
+        waterController.text.toLowerCase();
 
-    } else if (soil == "red" &&
-        season == "summer") {
+    if (soil.contains("black") &&
+        season.contains("winter")) {
 
-      result = "Recommended Crop: Groundnut";
+      result =
+          "Recommended Crop:\nWheat 🌾";
+
+    } else if (soil.contains("red") &&
+        water.contains("high")) {
+
+      result =
+          "Recommended Crop:\nRice 🌱";
+
+    } else if (soil.contains("alluvial")) {
+
+      result =
+          "Recommended Crop:\nSugarcane 🌾";
 
     } else {
 
-      result = "Recommended Crop: Rice";
+      result =
+          "Recommended Crop:\nMillets 🌿";
     }
 
     setState(() {
@@ -55,11 +72,13 @@ class _CropRecommendationScreenState
     return Scaffold(
 
       appBar: AppBar(
-        title: const Text("Crop Recommendation"),
+        title:
+            const Text("Crop Recommendation"),
         backgroundColor: Colors.green,
       ),
 
-      body: Padding(
+      body: SingleChildScrollView(
+
         padding: const EdgeInsets.all(20),
 
         child: Column(
@@ -70,7 +89,7 @@ class _CropRecommendationScreenState
               controller: soilController,
 
               decoration: const InputDecoration(
-                labelText: "Soil Type",
+                labelText: "Enter Soil Type",
                 border: OutlineInputBorder(),
               ),
             ),
@@ -81,7 +100,7 @@ class _CropRecommendationScreenState
               controller: seasonController,
 
               decoration: const InputDecoration(
-                labelText: "Season",
+                labelText: "Enter Season",
                 border: OutlineInputBorder(),
               ),
             ),
@@ -92,7 +111,8 @@ class _CropRecommendationScreenState
               controller: waterController,
 
               decoration: const InputDecoration(
-                labelText: "Water Availability",
+                labelText:
+                    "Water Availability",
                 border: OutlineInputBorder(),
               ),
             ),
@@ -103,30 +123,28 @@ class _CropRecommendationScreenState
               width: double.infinity,
 
               child: ElevatedButton(
-                onPressed: recommendCrop,
 
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.all(15),
-                ),
+                onPressed: recommendCrop,
 
                 child: const Text(
                   "Recommend Crop",
+
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 18,
                   ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 35),
 
             Text(
               result,
 
+              textAlign: TextAlign.center,
+
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.green,
               ),
