@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'product_details_screen.dart';
+
 class HomeScreen extends StatelessWidget {
 
   const HomeScreen({
@@ -46,6 +48,7 @@ class HomeScreen extends StatelessWidget {
 
       appBar: AppBar(
         backgroundColor: Colors.green,
+
         title: const Text(
           "Krishi Mithra",
         ),
@@ -74,7 +77,9 @@ class HomeScreen extends StatelessWidget {
                     OutlineInputBorder(
 
                   borderRadius:
-                      BorderRadius.circular(15),
+                      BorderRadius.circular(
+                    15,
+                  ),
                 ),
               ),
             ),
@@ -103,122 +108,163 @@ class HomeScreen extends StatelessWidget {
                   final product =
                       products[index];
 
-                  return Card(
+                  return GestureDetector(
 
-                    elevation: 5,
+                    onTap: () {
 
-                    shape:
-                        RoundedRectangleBorder(
+                      Navigator.push(
 
-                      borderRadius:
-                          BorderRadius.circular(
-                        15,
+                        context,
+
+                        MaterialPageRoute(
+
+                          builder: (context) =>
+                              ProductDetailsScreen(
+
+                            name:
+                                product["name"]!,
+
+                            price:
+                                product["price"]!,
+
+                            farmer:
+                                product["farmer"]!,
+
+                            location:
+                                product["location"]!,
+                          ),
+                        ),
+                      );
+                    },
+
+                    child: Card(
+
+                      elevation: 5,
+
+                      shape:
+                          RoundedRectangleBorder(
+
+                        borderRadius:
+                            BorderRadius.circular(
+                          15,
+                        ),
                       ),
-                    ),
 
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.all(
-                        12,
-                      ),
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.all(
+                          12,
+                        ),
 
-                      child: Column(
+                        child: Column(
 
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
 
-                        children: [
+                          children: [
 
-                          Container(
+                            Container(
 
-                            height: 100,
-                            width: double.infinity,
+                              height: 100,
+                              width:
+                                  double.infinity,
 
-                            decoration:
-                                BoxDecoration(
+                              decoration:
+                                  BoxDecoration(
 
-                              color:
-                                  Colors.green.shade100,
+                                color:
+                                    Colors.green.shade100,
 
-                              borderRadius:
-                                  BorderRadius.circular(
-                                12,
+                                borderRadius:
+                                    BorderRadius.circular(
+                                  12,
+                                ),
+                              ),
+
+                              child: const Icon(
+                                Icons.agriculture,
+                                size: 60,
+                                color:
+                                    Colors.green,
                               ),
                             ),
 
-                            child: const Icon(
-                              Icons.agriculture,
-                              size: 60,
-                              color: Colors.green,
+                            const SizedBox(
+                              height: 12,
                             ),
-                          ),
 
-                          const SizedBox(height: 12),
+                            Text(
+                              product["name"]!,
 
-                          Text(
-                            product["name"]!,
-
-                            style:
-                                const TextStyle(
-                              fontSize: 18,
-                              fontWeight:
-                                  FontWeight.bold,
+                              style:
+                                  const TextStyle(
+                                fontSize: 18,
+                                fontWeight:
+                                    FontWeight.bold,
+                              ),
                             ),
-                          ),
 
-                          const SizedBox(height: 6),
-
-                          Text(
-                            product["price"]!,
-
-                            style:
-                                const TextStyle(
-                              color: Colors.green,
-                              fontWeight:
-                                  FontWeight.bold,
-                              fontSize: 16,
+                            const SizedBox(
+                              height: 6,
                             ),
-                          ),
 
-                          const SizedBox(height: 6),
+                            Text(
+                              product["price"]!,
 
-                          Text(
-                            "Farmer: ${product["farmer"]}",
-                          ),
+                              style:
+                                  const TextStyle(
+                                color:
+                                    Colors.green,
+                                fontWeight:
+                                    FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
 
-                          Text(
-                            product["location"]!,
-                          ),
+                            const SizedBox(
+                              height: 6,
+                            ),
 
-                          const Spacer(),
+                            Text(
+                              "Farmer: ${product["farmer"]}",
+                            ),
 
-                          SizedBox(
-                            width: double.infinity,
+                            Text(
+                              product["location"]!,
+                            ),
 
-                            child: ElevatedButton(
+                            const Spacer(),
 
-                              onPressed: () {
+                            SizedBox(
+                              width:
+                                  double.infinity,
 
-                                ScaffoldMessenger.of(
-                                        context)
-                                    .showSnackBar(
+                              child:
+                                  ElevatedButton(
 
-                                  SnackBar(
+                                onPressed: () {
 
-                                    content: Text(
-                                      "${product["name"]} added to cart 🛒",
+                                  ScaffoldMessenger.of(
+                                          context)
+                                      .showSnackBar(
+
+                                    SnackBar(
+
+                                      content: Text(
+                                        "${product["name"]} added to cart 🛒",
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
 
-                              child: const Text(
-                                "Buy Now",
+                                child: const Text(
+                                  "Buy Now",
+                                ),
                               ),
                             ),
-                          ),
 
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );
