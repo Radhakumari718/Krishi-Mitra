@@ -11,6 +11,7 @@ import 'language_screen.dart';
 import 'price_prediction_screen.dart';
 import 'disease_detection_screen.dart';
 import 'tips_screen.dart';
+import 'schemes_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -184,6 +185,13 @@ class FarmerDashboard extends StatelessWidget {
                     Icons.lightbulb,
                     "Farming\nTips",
                     const TipsScreen(),
+                  ),
+
+                  dashboardItem(
+                    context,
+                    Icons.account_balance,
+                    "Govt\nSchemes",
+                    const SchemesScreen(),
                   ),
 
                 ],
