@@ -12,6 +12,7 @@ import 'price_prediction_screen.dart';
 import 'disease_detection_screen.dart';
 import 'tips_screen.dart';
 import 'schemes_screen.dart';
+import 'soil_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -192,6 +193,13 @@ class FarmerDashboard extends StatelessWidget {
                     Icons.account_balance,
                     "Govt\nSchemes",
                     const SchemesScreen(),
+                  ),
+
+                  dashboardItem(
+                    context,
+                    Icons.landscape,
+                    "Soil\nInformation",
+                    const SoilScreen(),
                   ),
 
                 ],
