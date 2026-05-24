@@ -14,9 +14,13 @@ import 'tips_screen.dart';
 import 'schemes_screen.dart';
 import 'soil_screen.dart';
 import 'help_support_screen.dart';
+import 'sell_product_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
-  const FarmerDashboard({super.key});
+
+  const FarmerDashboard({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,8 @@ class FarmerDashboard extends StatelessWidget {
           ),
 
           IconButton(
-            icon: const Icon(Icons.notifications),
+            icon:
+                const Icon(Icons.notifications),
 
             onPressed: () {
 
@@ -104,7 +109,8 @@ class FarmerDashboard extends StatelessWidget {
 
         child: Column(
 
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
 
           children: [
 
@@ -113,7 +119,8 @@ class FarmerDashboard extends StatelessWidget {
 
               style: TextStyle(
                 fontSize: 28,
-                fontWeight: FontWeight.bold,
+                fontWeight:
+                    FontWeight.bold,
                 color: Colors.green,
               ),
             ),
@@ -132,6 +139,7 @@ class FarmerDashboard extends StatelessWidget {
             const SizedBox(height: 25),
 
             Expanded(
+
               child: GridView.count(
 
                 crossAxisCount: 2,
@@ -139,6 +147,20 @@ class FarmerDashboard extends StatelessWidget {
                 mainAxisSpacing: 15,
 
                 children: [
+
+                  dashboardItem(
+                    context,
+                    Icons.sell,
+                    "Sell\nProducts",
+                    const SellProductScreen(),
+                  ),
+
+                  dashboardItem(
+                    context,
+                    Icons.store,
+                    "Marketplace",
+                    const MarketplaceScreen(),
+                  ),
 
                   dashboardItem(
                     context,
@@ -152,13 +174,6 @@ class FarmerDashboard extends StatelessWidget {
                     Icons.cloud,
                     "Weather\nAlerts",
                     const WeatherScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.store,
-                    "Marketplace",
-                    const MarketplaceScreen(),
                   ),
 
                   dashboardItem(
@@ -283,7 +298,8 @@ class FarmerDashboard extends StatelessWidget {
 
                 style: const TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontWeight:
+                      FontWeight.bold,
                   color: Colors.white,
                 ),
               ),

@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 
 void main() {
-  runApp(const KrishiMithraApp());
+
+  runApp(
+    const MyApp(),
+  );
 }
 
-class KrishiMithraApp extends StatelessWidget {
-  const KrishiMithraApp({super.key});
+class MyApp extends StatelessWidget {
+
+  const MyApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,32 +28,27 @@ class KrishiMithraApp extends StatelessWidget {
 
         primarySwatch: Colors.green,
 
-        scaffoldBackgroundColor: const Color(0xFFF4FDF3),
-
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.green,
-          centerTitle: true,
-          elevation: 2,
-        ),
-
-        elevatedButtonTheme: ElevatedButtonThemeData(
+        elevatedButtonTheme:
+            ElevatedButtonThemeData(
 
           style: ElevatedButton.styleFrom(
+
             backgroundColor: Colors.green,
             foregroundColor: Colors.white,
 
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+            padding:
+                const EdgeInsets.symmetric(
+              vertical: 14,
             ),
-          ),
-        ),
 
-        cardTheme: CardThemeData(
+            shape:
+                RoundedRectangleBorder(
 
-          elevation: 5,
-
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+              borderRadius:
+                  BorderRadius.circular(
+                12,
+              ),
+            ),
           ),
         ),
       ),
