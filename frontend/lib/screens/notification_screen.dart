@@ -1,77 +1,121 @@
 import 'package:flutter/material.dart';
 
-class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({super.key});
+class NotificationScreen
+    extends StatelessWidget {
+
+  const NotificationScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
 
+    final List<Map<String, dynamic>>
+        notifications = [
+
+      {
+        "title":
+            "Rain Alert 🌧️",
+        "message":
+            "Heavy rain expected tomorrow.",
+        "icon": Icons.cloud,
+      },
+
+      {
+        "title":
+            "Market Update 📈",
+        "message":
+            "Tomato prices increased today.",
+        "icon": Icons.show_chart,
+      },
+
+      {
+        "title":
+            "Disease Warning 🚨",
+        "message":
+            "Leaf infection detected nearby.",
+        "icon":
+            Icons.health_and_safety,
+      },
+
+      {
+        "title":
+            "Irrigation Reminder 💧",
+        "message":
+            "Water crops this evening.",
+        "icon": Icons.water_drop,
+      },
+
+    ];
+
     return Scaffold(
 
       appBar: AppBar(
-        title: const Text("Notifications"),
+        title:
+            const Text("Notifications"),
         backgroundColor: Colors.green,
       ),
 
-      body: ListView(
+      body: ListView.builder(
 
-        children: [
+        padding:
+            const EdgeInsets.all(16),
 
-          notificationCard(
-            Icons.cloud,
-            "Rain Alert",
-            "Heavy rain expected tomorrow",
-          ),
+        itemCount:
+            notifications.length,
 
-          notificationCard(
-            Icons.currency_rupee,
-            "Market Price Alert",
-            "Rice price increased by 10%",
-          ),
+        itemBuilder: (context, index) {
 
-          notificationCard(
-            Icons.agriculture,
-            "Crop Suggestion",
-            "Best season to grow wheat",
-          ),
+          final item =
+              notifications[index];
 
-          notificationCard(
-            Icons.warning,
-            "Pest Warning",
-            "Possible pest attack detected",
-          ),
+          return Card(
 
-        ],
-      ),
-    );
-  }
+            margin:
+                const EdgeInsets.only(
+              bottom: 15,
+            ),
 
-  Widget notificationCard(
-    IconData icon,
-    String title,
-    String subtitle,
-  ) {
+            child: ListTile(
 
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.all(10),
+              leading: CircleAvatar(
+                backgroundColor:
+                    Colors.green,
 
-      child: ListTile(
+                child: Icon(
+                  item["icon"],
+                  color: Colors.white,
+                ),
+              ),
 
-        leading: Icon(
-          icon,
-          color: Colors.green,
-          size: 35,
-        ),
+              title: Text(
+                item["title"],
 
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+                style: const TextStyle(
+                  fontWeight:
+                      FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
 
-        subtitle: Text(subtitle),
+              subtitle: Padding(
+                padding:
+                    const EdgeInsets.only(
+                  top: 8,
+                ),
+
+                child: Text(
+                  item["message"],
+
+                  style:
+                      const TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

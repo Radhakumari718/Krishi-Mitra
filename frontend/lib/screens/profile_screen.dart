@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+
+  const ProfileScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +16,8 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.green,
       ),
 
-      body: Padding(
+      body: SingleChildScrollView(
+
         padding: const EdgeInsets.all(20),
 
         child: Column(
@@ -31,30 +35,36 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
 
-            profileTile(
+            buildProfileCard(
               Icons.person,
               "Farmer Name",
-              "Ramu Farmer",
+              "Ramesh Kumar",
             ),
 
-            profileTile(
+            buildProfileCard(
               Icons.phone,
-              "Phone Number",
+              "Mobile Number",
               "+91 9876543210",
             ),
 
-            profileTile(
+            buildProfileCard(
               Icons.location_on,
               "Village",
               "Andhra Pradesh",
             ),
 
-            profileTile(
+            buildProfileCard(
               Icons.agriculture,
               "Farming Type",
               "Organic Farming",
+            ),
+
+            buildProfileCard(
+              Icons.landscape,
+              "Land Area",
+              "5 Acres",
             ),
 
           ],
@@ -63,26 +73,46 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget profileTile(
+  Widget buildProfileCard(
     IconData icon,
     String title,
     String value,
   ) {
 
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.only(bottom: 20),
+
+      margin: const EdgeInsets.only(
+        bottom: 15,
+      ),
 
       child: ListTile(
 
-        leading: Icon(
-          icon,
-          color: Colors.green,
+        leading: CircleAvatar(
+          backgroundColor:
+              Colors.green,
+
+          child: Icon(
+            icon,
+            color: Colors.white,
+          ),
         ),
 
-        title: Text(title),
+        title: Text(
+          title,
 
-        subtitle: Text(value),
+          style: const TextStyle(
+            fontWeight:
+                FontWeight.bold,
+          ),
+        ),
+
+        subtitle: Text(
+          value,
+
+          style: const TextStyle(
+            fontSize: 16,
+          ),
+        ),
       ),
     );
   }
