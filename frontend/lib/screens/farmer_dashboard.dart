@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'login_screen.dart';
 import 'weather_screen.dart';
 import 'marketplace_screen.dart';
@@ -9,6 +10,7 @@ import 'notification_screen.dart';
 import 'language_screen.dart';
 import 'price_prediction_screen.dart';
 import 'disease_detection_screen.dart';
+import 'tips_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -105,6 +107,7 @@ class FarmerDashboard extends StatelessWidget {
 
             const Text(
               "Welcome Farmer 👨‍🌾",
+
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
@@ -116,6 +119,7 @@ class FarmerDashboard extends StatelessWidget {
 
             const Text(
               "Smart Farming Assistant",
+
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black54,
@@ -175,6 +179,13 @@ class FarmerDashboard extends StatelessWidget {
                     const DiseaseDetectionScreen(),
                   ),
 
+                  dashboardItem(
+                    context,
+                    Icons.lightbulb,
+                    "Farming\nTips",
+                    const TipsScreen(),
+                  ),
+
                 ],
               ),
             ),
@@ -210,7 +221,10 @@ class FarmerDashboard extends StatelessWidget {
         child: Container(
 
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
+
+            borderRadius:
+                BorderRadius.circular(15),
+
             gradient: LinearGradient(
 
               colors: [
@@ -224,7 +238,9 @@ class FarmerDashboard extends StatelessWidget {
           ),
 
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+
+            mainAxisAlignment:
+                MainAxisAlignment.center,
 
             children: [
 
@@ -238,6 +254,7 @@ class FarmerDashboard extends StatelessWidget {
 
               Text(
                 title,
+
                 textAlign: TextAlign.center,
 
                 style: const TextStyle(

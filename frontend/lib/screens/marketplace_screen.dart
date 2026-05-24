@@ -6,6 +6,40 @@ class MarketplaceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final List<Map<String, String>> products = [
+
+      {
+        "name": "Rice",
+        "price": "₹2500 / Quintal",
+      },
+
+      {
+        "name": "Wheat",
+        "price": "₹2200 / Quintal",
+      },
+
+      {
+        "name": "Tomatoes",
+        "price": "₹40 / Kg",
+      },
+
+      {
+        "name": "Organic Fertilizer",
+        "price": "₹800 / Bag",
+      },
+
+      {
+        "name": "Pesticide Spray",
+        "price": "₹600 / Bottle",
+      },
+
+      {
+        "name": "Tractor Rental",
+        "price": "₹1500 / Day",
+      },
+
+    ];
+
     return Scaffold(
 
       appBar: AppBar(
@@ -16,105 +50,100 @@ class MarketplaceScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
 
-        child: ListView(
+        child: GridView.builder(
 
-          children: [
+          itemCount: products.length,
 
-            cropCard(
-              "Rice",
-              "₹2500 / Quintal",
-              Icons.grass,
-            ),
+          gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
 
-            cropCard(
-              "Tomato",
-              "₹1200 / Quintal",
-              Icons.eco,
-            ),
+            crossAxisCount: 2,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 15,
+            childAspectRatio: 0.9,
+          ),
 
-            cropCard(
-              "Wheat",
-              "₹2200 / Quintal",
-              Icons.agriculture,
-            ),
+          itemBuilder: (context, index) {
 
-          ],
-        ),
-      ),
-    );
-  }
+            final product = products[index];
 
-  Widget cropCard(
-    String cropName,
-    String price,
-    IconData icon,
-  ) {
+            return Card(
 
-    return Card(
-      elevation: 5,
-      margin: const EdgeInsets.only(bottom: 20),
+              elevation: 5,
 
-      child: Padding(
-        padding: const EdgeInsets.all(20),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
 
-        child: Row(
+                child: Column(
 
-          children: [
+                  mainAxisAlignment:
+                      MainAxisAlignment.center,
 
-            Icon(
-              icon,
-              size: 50,
-              color: Colors.green,
-            ),
+                  children: [
 
-            const SizedBox(width: 20),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
-                children: [
-
-                  Text(
-                    cropName,
-
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                    const Icon(
+                      Icons.shopping_bag,
+                      size: 60,
+                      color: Colors.green,
                     ),
-                  ),
 
-                  const SizedBox(height: 5),
+                    const SizedBox(height: 15),
 
-                  Text(
-                    price,
+                    Text(
 
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
+                      product["name"]!,
+
+                      textAlign: TextAlign.center,
+
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
 
-            ElevatedButton(
-              onPressed: () {
+                    const SizedBox(height: 10),
 
-              },
+                    Text(
 
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
+                      product["price"]!,
 
-              child: const Text(
-                "Buy",
-                style: TextStyle(
-                  color: Colors.white,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    SizedBox(
+
+                      width: double.infinity,
+
+                      child: ElevatedButton(
+
+                        onPressed: () {
+
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
+
+                            SnackBar(
+
+                              content: Text(
+                                "${product["name"]} added to cart",
+                              ),
+                            ),
+                          );
+                        },
+
+                        child: const Text("Buy"),
+                      ),
+                    ),
+
+                  ],
                 ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

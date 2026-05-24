@@ -20,10 +20,10 @@ class _BottomNavScreenState
 
   final List<Widget> screens = [
 
-    const FarmerDashboard(),
-    const WeatherScreen(),
-    const MarketplaceScreen(),
-    const ProfileScreen(),
+    FarmerDashboard(),
+    WeatherScreen(),
+    MarketplaceScreen(),
+    ProfileScreen(),
 
   ];
 
@@ -40,6 +40,8 @@ class _BottomNavScreenState
 
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,
+
+        type: BottomNavigationBarType.fixed,
 
         onTap: (index) {
 
