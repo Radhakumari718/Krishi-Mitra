@@ -15,92 +15,69 @@ import 'schemes_screen.dart';
 import 'soil_screen.dart';
 import 'help_support_screen.dart';
 import 'sell_product_screen.dart';
+import 'cart_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
-
-  const FarmerDashboard({
-    super.key,
-  });
+  const FarmerDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       appBar: AppBar(
         title: const Text("Krishi Mithra"),
-
+        backgroundColor: Colors.green,
         actions: [
-
           IconButton(
             icon: const Icon(Icons.language),
-
             onPressed: () {
-
               Navigator.push(
                 context,
-
                 MaterialPageRoute(
                   builder: (context) =>
                       const LanguageScreen(),
                 ),
               );
-
             },
           ),
 
           IconButton(
-            icon:
-                const Icon(Icons.notifications),
-
+            icon: const Icon(Icons.notifications),
             onPressed: () {
-
               Navigator.push(
                 context,
-
                 MaterialPageRoute(
                   builder: (context) =>
                       const NotificationScreen(),
                 ),
               );
-
             },
           ),
 
           IconButton(
             icon: const Icon(Icons.person),
-
             onPressed: () {
-
               Navigator.push(
                 context,
-
                 MaterialPageRoute(
                   builder: (context) =>
                       const ProfileScreen(),
                 ),
               );
-
             },
           ),
 
           IconButton(
             icon: const Icon(Icons.logout),
-
             onPressed: () {
-
               Navigator.pushReplacement(
                 context,
-
                 MaterialPageRoute(
                   builder: (context) =>
                       const LoginScreen(),
                 ),
               );
-
             },
           ),
-
         ],
       ),
 
@@ -108,7 +85,6 @@ class FarmerDashboard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
 
         child: Column(
-
           crossAxisAlignment:
               CrossAxisAlignment.start,
 
@@ -116,7 +92,6 @@ class FarmerDashboard extends StatelessWidget {
 
             const Text(
               "Welcome Farmer 👨‍🌾",
-
               style: TextStyle(
                 fontSize: 28,
                 fontWeight:
@@ -128,8 +103,7 @@ class FarmerDashboard extends StatelessWidget {
             const SizedBox(height: 8),
 
             const Text(
-              "Smart Farming Assistant",
-
+              "Direct Farmer To Buyer Platform",
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black54,
@@ -139,9 +113,7 @@ class FarmerDashboard extends StatelessWidget {
             const SizedBox(height: 25),
 
             Expanded(
-
               child: GridView.count(
-
                 crossAxisCount: 2,
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
@@ -153,6 +125,13 @@ class FarmerDashboard extends StatelessWidget {
                     Icons.sell,
                     "Sell\nProducts",
                     const SellProductScreen(),
+                  ),
+
+                  dashboardItem(
+                    context,
+                    Icons.shopping_cart,
+                    "My\nCart",
+                    const CartScreen(),
                   ),
 
                   dashboardItem(
@@ -224,7 +203,6 @@ class FarmerDashboard extends StatelessWidget {
                     "Help &\nSupport",
                     const HelpSupportScreen(),
                   ),
-
                 ],
               ),
             ),
@@ -240,32 +218,25 @@ class FarmerDashboard extends StatelessWidget {
     String title,
     Widget screen,
   ) {
-
     return GestureDetector(
-
       onTap: () {
-
         Navigator.push(
           context,
-
           MaterialPageRoute(
             builder: (context) => screen,
           ),
         );
-
       },
 
       child: Card(
+        elevation: 5,
 
         child: Container(
-
           decoration: BoxDecoration(
-
             borderRadius:
                 BorderRadius.circular(15),
 
             gradient: LinearGradient(
-
               colors: [
                 Colors.green.shade400,
                 Colors.green.shade700,
@@ -277,7 +248,6 @@ class FarmerDashboard extends StatelessWidget {
           ),
 
           child: Column(
-
             mainAxisAlignment:
                 MainAxisAlignment.center,
 
@@ -293,7 +263,6 @@ class FarmerDashboard extends StatelessWidget {
 
               Text(
                 title,
-
                 textAlign: TextAlign.center,
 
                 style: const TextStyle(
@@ -303,7 +272,6 @@ class FarmerDashboard extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-
             ],
           ),
         ),
