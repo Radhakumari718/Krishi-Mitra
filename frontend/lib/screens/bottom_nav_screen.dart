@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'farmer_dashboard.dart';
-import 'weather_screen.dart';
-import 'marketplace_screen.dart';
+import 'cart_screen.dart';
+import 'sell_product_screen.dart';
+import 'orders_screen.dart';
 import 'profile_screen.dart';
 
 class BottomNavScreen extends StatefulWidget {
@@ -20,10 +21,11 @@ class _BottomNavScreenState
 
   final List<Widget> screens = [
 
-    FarmerDashboard(),
-    WeatherScreen(),
-    MarketplaceScreen(),
-    ProfileScreen(),
+    const FarmerDashboard(),
+    const CartScreen(),
+    const SellProductScreen(),
+    const OrdersScreen(),
+    const ProfileScreen(),
 
   ];
 
@@ -61,13 +63,18 @@ class _BottomNavScreenState
           ),
 
           BottomNavigationBarItem(
-            icon: Icon(Icons.cloud),
-            label: "Weather",
+            icon: Icon(Icons.shopping_cart),
+            label: "Cart",
           ),
 
           BottomNavigationBarItem(
-            icon: Icon(Icons.store),
-            label: "Market",
+            icon: Icon(Icons.sell),
+            label: "Sell",
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.inventory),
+            label: "Orders",
           ),
 
           BottomNavigationBarItem(

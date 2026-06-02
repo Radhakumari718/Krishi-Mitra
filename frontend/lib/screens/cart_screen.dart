@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'payment_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -8,11 +9,9 @@ class CartScreen extends StatefulWidget {
       _CartScreenState();
 }
 
-class _CartScreenState
-    extends State<CartScreen> {
+class _CartScreenState extends State<CartScreen> {
 
-  final List<Map<String, String>>
-      cartItems = [
+  final List<Map<String, String>> cartItems = [
 
     {
       "name": "Tomatoes",
@@ -44,21 +43,15 @@ class _CartScreenState
 
             child: ListView.builder(
 
-              itemCount:
-                  cartItems.length,
+              itemCount: cartItems.length,
 
-              itemBuilder:
-                  (context, index) {
+              itemBuilder: (context, index) {
 
-                final item =
-                    cartItems[index];
+                final item = cartItems[index];
 
                 return Card(
 
-                  margin:
-                      const EdgeInsets.all(
-                    10,
-                  ),
+                  margin: const EdgeInsets.all(10),
 
                   child: ListTile(
 
@@ -86,11 +79,10 @@ class _CartScreenState
 
                         setState(() {
 
-                          cartItems.removeAt(
-                            index,
-                          );
+                          cartItems.removeAt(index);
 
                         });
+
                       },
                     ),
                   ),
@@ -101,10 +93,7 @@ class _CartScreenState
 
           Container(
 
-            padding:
-                const EdgeInsets.all(
-              20,
-            ),
+            padding: const EdgeInsets.all(20),
 
             width: double.infinity,
 
@@ -112,17 +101,18 @@ class _CartScreenState
 
               onPressed: () {
 
-                ScaffoldMessenger.of(
-                        context)
-                    .showSnackBar(
+                Navigator.push(
 
-                  const SnackBar(
+                  context,
 
-                    content: Text(
-                      "Proceeding To Checkout 💳",
-                    ),
+                  MaterialPageRoute(
+
+                    builder: (context) =>
+                        const PaymentScreen(),
+
                   ),
                 );
+
               },
 
               child: const Text(
