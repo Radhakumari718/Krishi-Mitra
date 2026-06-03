@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
 
-class CropRecommendationScreen
-    extends StatefulWidget {
-
-  const CropRecommendationScreen({
-    super.key,
-  });
+class CropRecommendationScreen extends StatefulWidget {
+  const CropRecommendationScreen({super.key});
 
   @override
-  State<CropRecommendationScreen>
-      createState() =>
-          _CropRecommendationScreenState();
+  State<CropRecommendationScreen> createState() =>
+      _CropRecommendationScreenState();
 }
 
 class _CropRecommendationScreenState
@@ -27,41 +23,25 @@ class _CropRecommendationScreenState
 
   String result = "";
 
-  void recommendCrop() {
+  Future<void> recommendCrop() async {
 
-    String soil =
-        soilController.text.toLowerCase();
+    String soil = soilController.text;
 
-    String season =
-        seasonController.text.toLowerCase();
+    String season = seasonController.text;
 
-    String water =
-        waterController.text.toLowerCase();
+    String water = waterController.text;
 
-    if (soil.contains("black") &&
-        season.contains("winter")) {
-
-      result =
-          "Recommended Crop:\nWheat 🌾";
-
-    } else if (soil.contains("red") &&
-        water.contains("high")) {
-
-      result =
-          "Recommended Crop:\nRice 🌱";
-
-    } else if (soil.contains("alluvial")) {
-
-      result =
-          "Recommended Crop:\nSugarcane 🌾";
-
-    } else {
-
-      result =
-          "Recommended Crop:\nMillets 🌿";
-    }
+    String crop =
+        await ApiService.recommendCrop(
+      soil,
+      season,
+      water,
+    );
 
     setState(() {
+
+      result =
+          "Recommended Crop:\n$crop";
 
     });
   }
@@ -79,41 +59,53 @@ class _CropRecommendationScreenState
 
       body: SingleChildScrollView(
 
-        padding: const EdgeInsets.all(20),
+        padding:
+            const EdgeInsets.all(20),
 
         child: Column(
 
           children: [
 
             TextField(
-              controller: soilController,
+              controller:
+                  soilController,
 
-              decoration: const InputDecoration(
-                labelText: "Enter Soil Type",
-                border: OutlineInputBorder(),
+              decoration:
+                  const InputDecoration(
+                labelText:
+                    "Enter Soil Type",
+                border:
+                    OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 20),
 
             TextField(
-              controller: seasonController,
+              controller:
+                  seasonController,
 
-              decoration: const InputDecoration(
-                labelText: "Enter Season",
-                border: OutlineInputBorder(),
+              decoration:
+                  const InputDecoration(
+                labelText:
+                    "Enter Season",
+                border:
+                    OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 20),
 
             TextField(
-              controller: waterController,
+              controller:
+                  waterController,
 
-              decoration: const InputDecoration(
+              decoration:
+                  const InputDecoration(
                 labelText:
                     "Water Availability",
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(),
               ),
             ),
 
@@ -124,7 +116,8 @@ class _CropRecommendationScreenState
 
               child: ElevatedButton(
 
-                onPressed: recommendCrop,
+                onPressed:
+                    recommendCrop,
 
                 child: const Text(
                   "Recommend Crop",
@@ -141,12 +134,15 @@ class _CropRecommendationScreenState
             Text(
               result,
 
-              textAlign: TextAlign.center,
+              textAlign:
+                  TextAlign.center,
 
               style: const TextStyle(
                 fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
+                fontWeight:
+                    FontWeight.bold,
+                color:
+                    Colors.green,
               ),
             ),
 
