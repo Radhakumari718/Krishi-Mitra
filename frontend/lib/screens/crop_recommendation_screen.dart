@@ -12,38 +12,92 @@ class CropRecommendationScreen extends StatefulWidget {
 class _CropRecommendationScreenState
     extends State<CropRecommendationScreen> {
 
-  final TextEditingController soilController =
+  final TextEditingController nController =
       TextEditingController();
 
-  final TextEditingController seasonController =
+  final TextEditingController pController =
       TextEditingController();
 
-  final TextEditingController waterController =
+  final TextEditingController kController =
+      TextEditingController();
+
+  final TextEditingController temperatureController =
+      TextEditingController();
+
+  final TextEditingController humidityController =
+      TextEditingController();
+
+  final TextEditingController phController =
+      TextEditingController();
+
+  final TextEditingController rainfallController =
       TextEditingController();
 
   String result = "";
 
   Future<void> recommendCrop() async {
 
-    String soil = soilController.text;
+    double n =
+        double.tryParse(nController.text) ?? 0;
 
-    String season = seasonController.text;
+    double p =
+        double.tryParse(pController.text) ?? 0;
 
-    String water = waterController.text;
+    double k =
+        double.tryParse(kController.text) ?? 0;
+
+    double temperature =
+        double.tryParse(
+            temperatureController.text) ??
+            0;
+
+    double humidity =
+        double.tryParse(
+            humidityController.text) ??
+            0;
+
+    double ph =
+        double.tryParse(phController.text) ?? 0;
+
+    double rainfall =
+        double.tryParse(
+            rainfallController.text) ??
+            0;
 
     String crop =
         await ApiService.recommendCrop(
-      soil,
-      season,
-      water,
+      n,
+      p,
+      k,
+      temperature,
+      humidity,
+      ph,
+      rainfall,
     );
 
     setState(() {
-
       result =
-          "Recommended Crop:\n$crop";
-
+          "Recommended Crop:\n\n$crop";
     });
+  }
+
+  Widget buildTextField(
+      TextEditingController controller,
+      String label) {
+    return Padding(
+      padding:
+          const EdgeInsets.only(bottom: 15),
+      child: TextField(
+        controller: controller,
+        keyboardType:
+            TextInputType.number,
+        decoration: InputDecoration(
+          labelText: label,
+          border:
+              const OutlineInputBorder(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -53,7 +107,7 @@ class _CropRecommendationScreenState
 
       appBar: AppBar(
         title:
-            const Text("Crop Recommendation"),
+            const Text("AI Crop Recommendation"),
         backgroundColor: Colors.green,
       ),
 
@@ -66,62 +120,45 @@ class _CropRecommendationScreenState
 
           children: [
 
-            TextField(
-              controller:
-                  soilController,
+            buildTextField(
+                nController,
+                "Nitrogen (N)"),
 
-              decoration:
-                  const InputDecoration(
-                labelText:
-                    "Enter Soil Type",
-                border:
-                    OutlineInputBorder(),
-              ),
-            ),
+            buildTextField(
+                pController,
+                "Phosphorus (P)"),
+
+            buildTextField(
+                kController,
+                "Potassium (K)"),
+
+            buildTextField(
+                temperatureController,
+                "Temperature"),
+
+            buildTextField(
+                humidityController,
+                "Humidity"),
+
+            buildTextField(
+                phController,
+                "pH"),
+
+            buildTextField(
+                rainfallController,
+                "Rainfall"),
 
             const SizedBox(height: 20),
-
-            TextField(
-              controller:
-                  seasonController,
-
-              decoration:
-                  const InputDecoration(
-                labelText:
-                    "Enter Season",
-                border:
-                    OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller:
-                  waterController,
-
-              decoration:
-                  const InputDecoration(
-                labelText:
-                    "Water Availability",
-                border:
-                    OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 30),
 
             SizedBox(
               width: double.infinity,
 
               child: ElevatedButton(
-
                 onPressed:
                     recommendCrop,
 
                 child: const Text(
                   "Recommend Crop",
-
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -129,14 +166,12 @@ class _CropRecommendationScreenState
               ),
             ),
 
-            const SizedBox(height: 35),
+            const SizedBox(height: 30),
 
             Text(
               result,
-
               textAlign:
                   TextAlign.center,
-
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight:
@@ -145,7 +180,6 @@ class _CropRecommendationScreenState
                     Colors.green,
               ),
             ),
-
           ],
         ),
       ),

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  // For Flutter Chrome
+  // Flutter Chrome
   static const String baseUrl = "http://127.0.0.1:8000";
 
   // --------------------------------
@@ -36,16 +36,19 @@ class ApiService {
   }
 
   // --------------------------------
-  // CROP RECOMMENDATION API
+  // AI CROP RECOMMENDATION API
   // --------------------------------
   static Future<String> recommendCrop(
-    String soil,
-    String season,
-    String water,
+    double n,
+    double p,
+    double k,
+    double temperature,
+    double humidity,
+    double ph,
+    double rainfall,
   ) async {
 
-    final url =
-        Uri.parse("$baseUrl/recommend-crop");
+    final url = Uri.parse("$baseUrl/recommend-crop");
 
     final response = await http.post(
       url,
@@ -53,9 +56,13 @@ class ApiService {
         "Content-Type": "application/json",
       },
       body: jsonEncode({
-        "soil": soil,
-        "season": season,
-        "water": water,
+        "N": n,
+        "P": p,
+        "K": k,
+        "temperature": temperature,
+        "humidity": humidity,
+        "ph": ph,
+        "rainfall": rainfall,
       }),
     );
 
@@ -78,8 +85,7 @@ class ApiService {
     String crop,
   ) async {
 
-    final url =
-        Uri.parse("$baseUrl/detect-disease");
+    final url = Uri.parse("$baseUrl/detect-disease");
 
     final response = await http.post(
       url,
@@ -110,8 +116,7 @@ class ApiService {
     String crop,
   ) async {
 
-    final url =
-        Uri.parse("$baseUrl/predict-price");
+    final url = Uri.parse("$baseUrl/predict-price");
 
     final response = await http.post(
       url,

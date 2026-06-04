@@ -1,12 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import joblib
+import pandas as pd
 
 app = FastAPI()
 
 # -------------------------
+# Load Crop Recommendation Model
+# -------------------------
+
+crop_model = joblib.load("crop_model.pkl")
+
+# -------------------------
 # CORS for Flutter Web
 # -------------------------
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,9 +33,13 @@ class ChatRequest(BaseModel):
 
 
 class CropRequest(BaseModel):
-    soil: str
-    season: str
-    water: str
+    N: float
+    P: float
+    K: float
+    temperature: float
+    humidity: float
+    ph: float
+    rainfall: float
 
 
 class DiseaseRequest(BaseModel):
@@ -79,28 +92,34 @@ def chat(req: ChatRequest):
 
 
 # -------------------------
-# Crop Recommendation API
+# AI Crop Recommendation API
 # -------------------------
 
 @app.post("/recommend-crop")
 def recommend_crop(req: CropRequest):
 
-    soil = req.soil.lower()
+    data = pd.DataFrame([[
+        req.N,
+        req.P,
+        req.K,
+        req.temperature,
+        req.humidity,
+        req.ph,
+        req.rainfall
+    ]], columns=[
+        "N",
+        "P",
+        "K",
+        "temperature",
+        "humidity",
+        "ph",
+        "rainfall"
+    ])
 
-    if soil == "black":
-        crop = "Cotton 🌱"
-
-    elif soil == "red":
-        crop = "Groundnut 🥜"
-
-    elif soil == "alluvial":
-        crop = "Rice 🌾"
-
-    else:
-        crop = "Wheat 🌾"
+    prediction = crop_model.predict(data)[0]
 
     return {
-        "recommended_crop": crop
+        "recommended_crop": prediction
     }
 
 
