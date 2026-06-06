@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../services/api_service.dart';
 
 class DiseaseDetectionScreen extends StatefulWidget {
@@ -12,17 +16,44 @@ class DiseaseDetectionScreen extends StatefulWidget {
 class _DiseaseDetectionScreenState
     extends State<DiseaseDetectionScreen> {
 
-  final TextEditingController cropController =
-      TextEditingController();
+  XFile? selectedImage;
+
+  Uint8List? imageBytes;
 
   String result = "";
+
   bool isLoading = false;
+
+  final ImagePicker picker = ImagePicker();
+
+  Future<void> pickImage() async {
+
+    final image = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (image != null) {
+
+      imageBytes = await image.readAsBytes();
+
+      setState(() {
+        selectedImage = image;
+      });
+    }
+  }
 
   Future<void> detectDisease() async {
 
-    String crop = cropController.text.trim();
+    if (selectedImage == null || imageBytes == null) {
 
-    if (crop.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Please select an image first",
+          ),
+        ),
+      );
+
       return;
     }
 
@@ -30,13 +61,30 @@ class _DiseaseDetectionScreenState
       isLoading = true;
     });
 
-    String response =
-        await ApiService.detectDisease(crop);
+    try {
 
-    setState(() {
-      result = response;
-      isLoading = false;
-    });
+      String response =
+          await ApiService.detectDisease(
+        imageBytes!,
+        selectedImage!.name,
+      );
+
+      setState(() {
+        result = response;
+      });
+
+    } catch (e) {
+
+      setState(() {
+        result = "Error: $e";
+      });
+
+    } finally {
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -45,11 +93,14 @@ class _DiseaseDetectionScreenState
     return Scaffold(
 
       appBar: AppBar(
-        title: const Text("Disease Detection"),
+        title: const Text(
+          "Disease Detection",
+        ),
         backgroundColor: Colors.green,
       ),
 
-      body: Padding(
+      body: SingleChildScrollView(
+
         padding: const EdgeInsets.all(20),
 
         child: Column(
@@ -64,18 +115,30 @@ class _DiseaseDetectionScreenState
 
             const SizedBox(height: 20),
 
-            TextField(
-              controller: cropController,
+            ElevatedButton.icon(
 
-              decoration: const InputDecoration(
-                labelText: "Enter Crop Name",
-                border: OutlineInputBorder(),
+              onPressed: pickImage,
+
+              icon: const Icon(Icons.image),
+
+              label: const Text(
+                "Select Leaf Image",
               ),
             ),
 
             const SizedBox(height: 20),
 
+            if (imageBytes != null)
+
+              Image.memory(
+                imageBytes!,
+                height: 250,
+              ),
+
+            const SizedBox(height: 20),
+
             SizedBox(
+
               width: double.infinity,
 
               child: ElevatedButton(
@@ -96,9 +159,14 @@ class _DiseaseDetectionScreenState
             if (isLoading)
               const CircularProgressIndicator(),
 
+            const SizedBox(height: 20),
+
             if (!isLoading)
+
               Text(
+
                 result,
+
                 textAlign: TextAlign.center,
 
                 style: const TextStyle(

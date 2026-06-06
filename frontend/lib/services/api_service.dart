@@ -1,14 +1,15 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  // Flutter Chrome
   static const String baseUrl = "http://127.0.0.1:8000";
 
   // --------------------------------
   // CHATBOT API
   // --------------------------------
+
   static Future<String> chat(String message) async {
 
     final url = Uri.parse("$baseUrl/chat");
@@ -36,8 +37,9 @@ class ApiService {
   }
 
   // --------------------------------
-  // AI CROP RECOMMENDATION API
+  // CROP RECOMMENDATION API
   // --------------------------------
+
   static Future<String> recommendCrop(
     double n,
     double p,
@@ -81,42 +83,59 @@ class ApiService {
   // --------------------------------
   // DISEASE DETECTION API
   // --------------------------------
+
   static Future<String> detectDisease(
-    String crop,
+    Uint8List imageBytes,
+    String fileName,
   ) async {
 
-    final url = Uri.parse("$baseUrl/detect-disease");
-
-    final response = await http.post(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode({
-        "crop": crop,
-      }),
+    final url = Uri.parse(
+      "$baseUrl/detect-disease",
     );
+
+    var request = http.MultipartRequest(
+      "POST",
+      url,
+    );
+
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        "file",
+        imageBytes,
+        filename: fileName,
+      ),
+    );
+
+    var response = await request.send();
 
     if (response.statusCode == 200) {
 
-      final data = jsonDecode(response.body);
+      var responseData =
+          await http.Response.fromStream(
+        response,
+      );
 
-      return "${data['disease']}\n\nSolution: ${data['solution']}";
+      final data =
+          jsonDecode(responseData.body);
 
-    } else {
-
-      return "Error detecting disease";
+      return
+          "Disease: ${data['disease']}\n\nConfidence: ${data['confidence']}%";
     }
+
+    return "Error detecting disease";
   }
 
   // --------------------------------
   // PRICE PREDICTION API
   // --------------------------------
+
   static Future<String> predictPrice(
     String crop,
   ) async {
 
-    final url = Uri.parse("$baseUrl/predict-price");
+    final url = Uri.parse(
+      "$baseUrl/predict-price",
+    );
 
     final response = await http.post(
       url,
@@ -130,7 +149,9 @@ class ApiService {
 
     if (response.statusCode == 200) {
 
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(
+        response.body,
+      );
 
       return data["predicted_price"];
 
