@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../utils/product_data.dart';
 
 class SellProductScreen extends StatefulWidget {
@@ -29,6 +33,24 @@ class _SellProductScreenState
   final TextEditingController locationController =
       TextEditingController();
 
+  Uint8List? imageBytes;
+
+  final ImagePicker picker = ImagePicker();
+
+  Future<void> pickImage() async {
+
+    final image = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (image != null) {
+
+      imageBytes = await image.readAsBytes();
+
+      setState(() {});
+    }
+  }
+
   void uploadProduct() {
 
     ProductData.products.add({
@@ -42,6 +64,8 @@ class _SellProductScreenState
       "location": locationController.text,
 
       "farmer": farmerController.text,
+
+      "imageBytes": imageBytes,
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -58,6 +82,10 @@ class _SellProductScreenState
     quantityController.clear();
     priceController.clear();
     locationController.clear();
+
+    setState(() {
+      imageBytes = null;
+    });
   }
 
   @override
@@ -88,7 +116,6 @@ class _SellProductScreenState
 
             TextField(
               controller: farmerController,
-
               decoration: const InputDecoration(
                 labelText: "Farmer Name",
                 border: OutlineInputBorder(),
@@ -99,7 +126,6 @@ class _SellProductScreenState
 
             TextField(
               controller: cropController,
-
               decoration: const InputDecoration(
                 labelText: "Crop Name",
                 border: OutlineInputBorder(),
@@ -110,7 +136,6 @@ class _SellProductScreenState
 
             TextField(
               controller: quantityController,
-
               decoration: const InputDecoration(
                 labelText: "Quantity",
                 border: OutlineInputBorder(),
@@ -121,7 +146,6 @@ class _SellProductScreenState
 
             TextField(
               controller: priceController,
-
               decoration: const InputDecoration(
                 labelText: "Price",
                 border: OutlineInputBorder(),
@@ -132,12 +156,33 @@ class _SellProductScreenState
 
             TextField(
               controller: locationController,
-
               decoration: const InputDecoration(
                 labelText: "Location",
                 border: OutlineInputBorder(),
               ),
             ),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton.icon(
+
+              onPressed: pickImage,
+
+              icon: const Icon(Icons.image),
+
+              label: const Text(
+                "Choose Product Image",
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            if (imageBytes != null)
+
+              Image.memory(
+                imageBytes!,
+                height: 200,
+              ),
 
             const SizedBox(height: 30),
 

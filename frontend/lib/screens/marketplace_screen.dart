@@ -47,18 +47,15 @@ class MarketplaceScreen extends StatelessWidget {
 
                   MaterialPageRoute(
 
-                    builder: (_) => ProductDetailsScreen(
+                   builder: (_) => ProductDetailsScreen(
 
-                      name: product["name"] ?? "",
-
-                      price: product["price"] ?? "",
-
-                      farmer: product["farmer"] ?? "Farmer",
-
-                      location: product["location"] ?? "",
-
-                      quantity: product["quantity"] ?? "",
-                    ),
+  name: product["name"] ?? "",
+  price: product["price"] ?? "",
+  farmer: product["farmer"] ?? "Farmer",
+  location: product["location"] ?? "",
+  quantity: product["quantity"] ?? "",
+  imageBytes: product["imageBytes"],
+),
                   ),
                 );
               },

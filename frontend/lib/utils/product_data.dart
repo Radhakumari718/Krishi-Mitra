@@ -1,6 +1,8 @@
+import 'dart:typed_data';
+
 class ProductData {
 
-  static List<Map<String, String>> products = [
+  static List<Map<String, dynamic>> products = [
 
     {
       "name": "Rice",
@@ -8,6 +10,7 @@ class ProductData {
       "location": "Vizag",
       "farmer": "Farmer",
       "quantity": "100 Kg",
+      "imageBytes": null,
     },
 
     {
@@ -16,6 +19,7 @@ class ProductData {
       "location": "Vizag",
       "farmer": "Farmer",
       "quantity": "80 Kg",
+      "imageBytes": null,
     },
 
   ];

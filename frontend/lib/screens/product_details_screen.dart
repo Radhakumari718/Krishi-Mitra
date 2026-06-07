@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -7,6 +9,7 @@ class ProductDetailsScreen extends StatelessWidget {
   final String farmer;
   final String location;
   final String quantity;
+  final Uint8List? imageBytes;
 
   const ProductDetailsScreen({
 
@@ -17,6 +20,7 @@ class ProductDetailsScreen extends StatelessWidget {
     required this.farmer,
     required this.location,
     required this.quantity,
+    this.imageBytes,
   });
 
   @override
@@ -51,11 +55,21 @@ class ProductDetailsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
 
-              child: const Icon(
-                Icons.agriculture,
-                size: 120,
-                color: Colors.green,
-              ),
+              child: imageBytes != null
+
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.memory(
+                        imageBytes!,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+
+                  : const Icon(
+                      Icons.agriculture,
+                      size: 120,
+                      color: Colors.green,
+                    ),
             ),
 
             const SizedBox(height: 25),
@@ -129,6 +143,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                 child: const Text(
                   "Add To Cart",
+
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -158,6 +173,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                 child: const Text(
                   "Buy Now",
+
                   style: TextStyle(
                     fontSize: 18,
                   ),
