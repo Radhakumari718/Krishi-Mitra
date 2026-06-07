@@ -118,8 +118,19 @@ class ApiService {
       final data =
           jsonDecode(responseData.body);
 
-      return
-          "Disease: ${data['disease']}\n\nConfidence: ${data['confidence']}%";
+      return '''
+Disease: ${data['disease']}
+
+Confidence: ${data['confidence']}%
+
+Solution:
+${data['solution']}
+
+Prevention:
+${data['prevention']}
+''';
+          
+          
     }
 
     return "Error detecting disease";
