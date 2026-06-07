@@ -42,6 +42,7 @@ dependencies:
   supabase_flutter: ^2.3.0
   geolocator: ^11.0.0
   http: ^1.2.0
+  flutter_dotenv: ^5.1.0
   #supabase
 
 dev_dependencies:
@@ -65,6 +66,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  # ✅ .env file asset ga add chesam
+  assets:
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:
