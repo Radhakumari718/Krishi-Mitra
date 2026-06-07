@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/product_data.dart';
 
 class SellProductScreen extends StatefulWidget {
 
@@ -31,24 +32,33 @@ class _SellProductScreenState
       locationController =
       TextEditingController();
 
-  void uploadProduct() {
+ void uploadProduct() {
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
+  ProductData.products.add({
 
-      const SnackBar(
+    "name": cropController.text,
 
-        content: Text(
-          "Product Uploaded Successfully 🌾",
-        ),
+    "price": "₹${priceController.text}",
+
+    "location": locationController.text,
+
+    "farmer": "Farmer",
+  });
+
+  ScaffoldMessenger.of(context).showSnackBar(
+
+    const SnackBar(
+      content: Text(
+        "Product Uploaded Successfully 🌾",
       ),
-    );
+    ),
+  );
 
-    cropController.clear();
-    quantityController.clear();
-    priceController.clear();
-    locationController.clear();
-  }
+  cropController.clear();
+  quantityController.clear();
+  priceController.clear();
+  locationController.clear();
+}
 
   @override
   Widget build(BuildContext context) {

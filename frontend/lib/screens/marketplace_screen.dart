@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../utils/product_data.dart';
+import 'product_details_screen.dart';
 
 class MarketplaceScreen extends StatelessWidget {
   const MarketplaceScreen({super.key});
@@ -6,39 +8,7 @@ class MarketplaceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final List<Map<String, String>> products = [
-
-      {
-        "name": "Rice",
-        "price": "₹2500 / Quintal",
-      },
-
-      {
-        "name": "Wheat",
-        "price": "₹2200 / Quintal",
-      },
-
-      {
-        "name": "Tomatoes",
-        "price": "₹40 / Kg",
-      },
-
-      {
-        "name": "Organic Fertilizer",
-        "price": "₹800 / Bag",
-      },
-
-      {
-        "name": "Pesticide Spray",
-        "price": "₹600 / Bottle",
-      },
-
-      {
-        "name": "Tractor Rental",
-        "price": "₹1500 / Day",
-      },
-
-    ];
+    final products = ProductData.products;
 
     return Scaffold(
 
@@ -67,79 +37,104 @@ class MarketplaceScreen extends StatelessWidget {
 
             final product = products[index];
 
-            return Card(
+            return InkWell(
 
-              elevation: 5,
+              onTap: () {
 
-              child: Padding(
-                padding: const EdgeInsets.all(15),
+                Navigator.push(
 
-                child: Column(
+                  context,
 
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
+                  MaterialPageRoute(
 
-                  children: [
+                    builder: (_) => ProductDetailsScreen(
 
-                    const Icon(
-                      Icons.shopping_bag,
-                      size: 60,
-                      color: Colors.green,
+                      name: product["name"] ?? "",
+
+                      price: product["price"] ?? "",
+
+                      farmer: product["farmer"] ?? "Farmer",
+
+                      location: product["location"] ?? "",
                     ),
+                  ),
+                );
+              },
 
-                    const SizedBox(height: 15),
+              child: Card(
 
-                    Text(
+                elevation: 5,
 
-                      product["name"]!,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
 
-                      textAlign: TextAlign.center,
+                  child: Column(
 
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
+
+                    children: [
+
+                      const Icon(
+                        Icons.shopping_bag,
+                        size: 60,
+                        color: Colors.green,
                       ),
-                    ),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 15),
 
-                    Text(
+                      Text(
 
-                      product["price"]!,
+                        product["name"] ?? "",
 
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                        textAlign: TextAlign.center,
+
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 15),
+                      const SizedBox(height: 10),
 
-                    SizedBox(
+                      Text(
 
-                      width: double.infinity,
+                        product["price"] ?? "",
 
-                      child: ElevatedButton(
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
 
-                        onPressed: () {
+                      const SizedBox(height: 15),
 
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
+                      SizedBox(
 
-                            SnackBar(
+                        width: double.infinity,
 
-                              content: Text(
-                                "${product["name"]} added to cart",
+                        child: ElevatedButton(
+
+                          onPressed: () {
+
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
+
+                              SnackBar(
+
+                                content: Text(
+                                  "${product["name"]} added to cart",
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
 
-                        child: const Text("Buy"),
+                          child: const Text("Buy"),
+                        ),
                       ),
-                    ),
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
