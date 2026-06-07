@@ -1,10 +1,90 @@
 import 'package:flutter/material.dart';
+import '../services/weather_service.dart';
 
-class WeatherScreen extends StatelessWidget {
+class WeatherScreen extends StatefulWidget {
+  const WeatherScreen({super.key});
 
-  const WeatherScreen({
-    super.key,
-  });
+  @override
+  State<WeatherScreen> createState() =>
+      _WeatherScreenState();
+}
+
+class _WeatherScreenState
+    extends State<WeatherScreen> {
+
+  final TextEditingController cityController =
+      TextEditingController();
+
+  String temperature = "";
+  String weather = "";
+  String humidity = "";
+  String windSpeed = "";
+
+  bool isLoading = false;
+
+  Future<void> getWeather() async {
+
+    if (cityController.text.trim().isEmpty) {
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final data =
+        await WeatherService.getWeather(
+      cityController.text.trim(),
+    );
+
+    if (data != null) {
+
+      setState(() {
+
+        temperature =
+            "${data['main']['temp']} °C";
+
+        weather =
+            data['weather'][0]['main'];
+
+        humidity =
+            "${data['main']['humidity']} %";
+
+        windSpeed =
+            "${data['wind']['speed']} m/s";
+
+      });
+
+    } else {
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        const SnackBar(
+          content: Text(
+            "City not found",
+          ),
+        ),
+      );
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Widget buildCard(
+    IconData icon,
+    String title,
+    String value,
+  ) {
+    return Card(
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        trailing: Text(value),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,145 +92,98 @@ class WeatherScreen extends StatelessWidget {
     return Scaffold(
 
       appBar: AppBar(
-        title: const Text("Weather Forecast"),
+        title: const Text(
+          "Weather Forecast",
+        ),
         backgroundColor: Colors.green,
       ),
 
       body: Padding(
-        padding:
-            const EdgeInsets.all(20),
 
-        child: Column(
+        padding: const EdgeInsets.all(20),
 
-          children: [
+        child: SingleChildScrollView(
 
-            Container(
+          child: Column(
 
-              width: double.infinity,
-              padding:
-                  const EdgeInsets.all(20),
+            children: [
 
-              decoration: BoxDecoration(
+              TextField(
 
-                color: Colors.green,
+                controller: cityController,
 
-                borderRadius:
-                    BorderRadius.circular(20),
+                decoration:
+                    const InputDecoration(
+                  labelText:
+                      "Enter City Name",
+                  border:
+                      OutlineInputBorder(),
+                ),
               ),
 
-              child: Column(
+              const SizedBox(height: 15),
 
-                children: [
+              SizedBox(
 
-                  const Icon(
-                    Icons.cloud,
-                    size: 80,
-                    color: Colors.white,
+                width: double.infinity,
+
+                child: ElevatedButton(
+
+                  onPressed: getWeather,
+
+                  child: const Text(
+                    "Get Weather",
                   ),
-
-                  const SizedBox(height: 15),
-
-                  const Text(
-                    "28°C",
-
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight:
-                          FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  const Text(
-                    "Cloudy Weather",
-
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white70,
-                    ),
-                  ),
-
-                ],
+                ),
               ),
-            ),
 
-            const SizedBox(height: 30),
+              const SizedBox(height: 20),
 
-            buildWeatherCard(
-              Icons.water_drop,
-              "Humidity",
-              "70%",
-            ),
+              if (isLoading)
+                const CircularProgressIndicator(),
 
-            buildWeatherCard(
-              Icons.air,
-              "Wind Speed",
-              "12 km/h",
-            ),
+              if (temperature.isNotEmpty)
 
-            buildWeatherCard(
-              Icons.grain,
-              "Rain Chance",
-              "60%",
-            ),
+                Column(
 
-            buildWeatherCard(
-              Icons.thermostat,
-              "Feels Like",
-              "30°C",
-            ),
+                  children: [
 
-          ],
-        ),
-      ),
-    );
-  }
+                    Text(
+                      temperature,
+                      style:
+                          const TextStyle(
+                        fontSize: 32,
+                        fontWeight:
+                            FontWeight.bold,
+                      ),
+                    ),
 
-  Widget buildWeatherCard(
-    IconData icon,
-    String title,
-    String value,
-  ) {
+                    Text(
+                      weather,
+                      style:
+                          const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
 
-    return Card(
+                    const SizedBox(
+                      height: 20,
+                    ),
 
-      margin:
-          const EdgeInsets.only(
-        bottom: 15,
-      ),
+                    buildCard(
+                      Icons.water_drop,
+                      "Humidity",
+                      humidity,
+                    ),
 
-      child: ListTile(
-
-        leading: CircleAvatar(
-          backgroundColor:
-              Colors.green,
-
-          child: Icon(
-            icon,
-            color: Colors.white,
-          ),
-        ),
-
-        title: Text(
-          title,
-
-          style: const TextStyle(
-            fontWeight:
-                FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-
-        trailing: Text(
-          value,
-
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.green,
-            fontWeight:
-                FontWeight.bold,
+                    buildCard(
+                      Icons.air,
+                      "Wind Speed",
+                      windSpeed,
+                    ),
+                  ],
+                ),
+            ],
           ),
         ),
       ),
