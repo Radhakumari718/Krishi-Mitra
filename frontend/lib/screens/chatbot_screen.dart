@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -16,8 +17,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   final scrollController  = ScrollController();
 
   // ✅ Groq API Key
-  final String groqApiKey = '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';
-
+  final String groqApiKey = dotenv.env['GROQ_API_KEY'] ?? '';
   List<Map<String, String>> messages = [];
   bool isLoading = false;
 
