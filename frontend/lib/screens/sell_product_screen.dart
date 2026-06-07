@@ -2,63 +2,63 @@ import 'package:flutter/material.dart';
 import '../utils/product_data.dart';
 
 class SellProductScreen extends StatefulWidget {
-
   const SellProductScreen({
     super.key,
   });
 
   @override
-  State<SellProductScreen>
-      createState() =>
-          _SellProductScreenState();
+  State<SellProductScreen> createState() =>
+      _SellProductScreenState();
 }
 
 class _SellProductScreenState
     extends State<SellProductScreen> {
 
-  final TextEditingController
-      cropController =
+  final TextEditingController farmerController =
       TextEditingController();
 
-  final TextEditingController
-      quantityController =
+  final TextEditingController cropController =
       TextEditingController();
 
-  final TextEditingController
-      priceController =
+  final TextEditingController quantityController =
       TextEditingController();
 
-  final TextEditingController
-      locationController =
+  final TextEditingController priceController =
       TextEditingController();
 
- void uploadProduct() {
+  final TextEditingController locationController =
+      TextEditingController();
 
-  ProductData.products.add({
+  void uploadProduct() {
 
-    "name": cropController.text,
+    ProductData.products.add({
 
-    "price": "₹${priceController.text}",
+      "name": cropController.text,
 
-    "location": locationController.text,
+      "price": "₹${priceController.text}",
 
-    "farmer": "Farmer",
-  });
+      "quantity": quantityController.text,
 
-  ScaffoldMessenger.of(context).showSnackBar(
+      "location": locationController.text,
 
-    const SnackBar(
-      content: Text(
-        "Product Uploaded Successfully 🌾",
+      "farmer": farmerController.text,
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+
+      const SnackBar(
+        content: Text(
+          "Product Uploaded Successfully 🌾",
+        ),
       ),
-    ),
-  );
+    );
 
-  cropController.clear();
-  quantityController.clear();
-  priceController.clear();
-  locationController.clear();
-}
+    farmerController.clear();
+    cropController.clear();
+    quantityController.clear();
+    priceController.clear();
+    locationController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,15 +66,13 @@ class _SellProductScreenState
     return Scaffold(
 
       appBar: AppBar(
-        title:
-            const Text("Sell Product"),
+        title: const Text("Sell Product"),
         backgroundColor: Colors.green,
       ),
 
       body: SingleChildScrollView(
 
-        padding:
-            const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
 
         child: Column(
 
@@ -89,59 +87,55 @@ class _SellProductScreenState
             const SizedBox(height: 20),
 
             TextField(
+              controller: farmerController,
+
+              decoration: const InputDecoration(
+                labelText: "Farmer Name",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            TextField(
               controller: cropController,
 
-              decoration:
-                  const InputDecoration(
-                labelText:
-                    "Crop Name",
-                border:
-                    OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Crop Name",
+                border: OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 20),
 
             TextField(
-              controller:
-                  quantityController,
+              controller: quantityController,
 
-              decoration:
-                  const InputDecoration(
-                labelText:
-                    "Quantity",
-                border:
-                    OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Quantity",
+                border: OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 20),
 
             TextField(
-              controller:
-                  priceController,
+              controller: priceController,
 
-              decoration:
-                  const InputDecoration(
-                labelText:
-                    "Price",
-                border:
-                    OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Price",
+                border: OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 20),
 
             TextField(
-              controller:
-                  locationController,
+              controller: locationController,
 
-              decoration:
-                  const InputDecoration(
-                labelText:
-                    "Location",
-                border:
-                    OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Location",
+                border: OutlineInputBorder(),
               ),
             ),
 
@@ -152,12 +146,10 @@ class _SellProductScreenState
 
               child: ElevatedButton(
 
-                onPressed:
-                    uploadProduct,
+                onPressed: uploadProduct,
 
                 child: const Text(
                   "Upload Product",
-
                   style: TextStyle(
                     fontSize: 18,
                   ),

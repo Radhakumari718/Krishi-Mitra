@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ProductDetailsScreen
-    extends StatelessWidget {
+class ProductDetailsScreen extends StatelessWidget {
 
   final String name;
   final String price;
   final String farmer;
   final String location;
+  final String quantity;
 
   const ProductDetailsScreen({
 
@@ -16,6 +16,7 @@ class ProductDetailsScreen
     required this.price,
     required this.farmer,
     required this.location,
+    required this.quantity,
   });
 
   @override
@@ -24,20 +25,17 @@ class ProductDetailsScreen
     return Scaffold(
 
       appBar: AppBar(
-        title:
-            const Text("Product Details"),
+        title: const Text("Product Details"),
         backgroundColor: Colors.green,
       ),
 
       body: SingleChildScrollView(
 
-        padding:
-            const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
 
         child: Column(
 
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
 
@@ -50,8 +48,7 @@ class ProductDetailsScreen
 
                 color: Colors.green.shade100,
 
-                borderRadius:
-                    BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20),
               ),
 
               child: const Icon(
@@ -68,8 +65,7 @@ class ProductDetailsScreen
 
               style: const TextStyle(
                 fontSize: 30,
-                fontWeight:
-                    FontWeight.bold,
+                fontWeight: FontWeight.bold,
               ),
             ),
 
@@ -81,8 +77,7 @@ class ProductDetailsScreen
               style: const TextStyle(
                 fontSize: 24,
                 color: Colors.green,
-                fontWeight:
-                    FontWeight.bold,
+                fontWeight: FontWeight.bold,
               ),
             ),
 
@@ -103,7 +98,7 @@ class ProductDetailsScreen
             buildInfoCard(
               Icons.inventory,
               "Available Stock",
-              "100 Kg",
+              quantity,
             ),
 
             buildInfoCard(
@@ -121,12 +116,10 @@ class ProductDetailsScreen
 
                 onPressed: () {
 
-                  ScaffoldMessenger.of(
-                          context)
+                  ScaffoldMessenger.of(context)
                       .showSnackBar(
 
                     const SnackBar(
-
                       content: Text(
                         "Added to Cart 🛒",
                       ),
@@ -136,7 +129,6 @@ class ProductDetailsScreen
 
                 child: const Text(
                   "Add To Cart",
-
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -153,12 +145,10 @@ class ProductDetailsScreen
 
                 onPressed: () {
 
-                  ScaffoldMessenger.of(
-                          context)
+                  ScaffoldMessenger.of(context)
                       .showSnackBar(
 
                     const SnackBar(
-
                       content: Text(
                         "Order Placed Successfully 🌾",
                       ),
@@ -168,7 +158,6 @@ class ProductDetailsScreen
 
                 child: const Text(
                   "Buy Now",
-
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -190,16 +179,14 @@ class ProductDetailsScreen
 
     return Card(
 
-      margin:
-          const EdgeInsets.only(
+      margin: const EdgeInsets.only(
         bottom: 15,
       ),
 
       child: ListTile(
 
         leading: CircleAvatar(
-          backgroundColor:
-              Colors.green,
+          backgroundColor: Colors.green,
 
           child: Icon(
             icon,
@@ -213,8 +200,7 @@ class ProductDetailsScreen
           value,
 
           style: const TextStyle(
-            fontWeight:
-                FontWeight.bold,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

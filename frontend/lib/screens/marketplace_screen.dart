@@ -56,6 +56,8 @@ class MarketplaceScreen extends StatelessWidget {
                       farmer: product["farmer"] ?? "Farmer",
 
                       location: product["location"] ?? "",
+
+                      quantity: product["quantity"] ?? "",
                     ),
                   ),
                 );
@@ -104,6 +106,19 @@ class MarketplaceScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
+                        ),
+                      ),
+
+                      const SizedBox(height: 5),
+
+                      Text(
+
+                        product["quantity"] ?? "",
+
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
 

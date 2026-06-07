@@ -19,6 +19,7 @@ class HomeScreen extends StatelessWidget {
         "price": "₹40/Kg",
         "farmer": "Ramesh",
         "location": "Guntur",
+        "quantity": "100 Kg",
       },
 
       {
@@ -26,6 +27,7 @@ class HomeScreen extends StatelessWidget {
         "price": "₹2800/Quintal",
         "farmer": "Suresh",
         "location": "Vijayawada",
+        "quantity": "500 Kg",
       },
 
       {
@@ -33,6 +35,7 @@ class HomeScreen extends StatelessWidget {
         "price": "₹30/Kg",
         "farmer": "Mahesh",
         "location": "Kurnool",
+        "quantity": "200 Kg",
       },
 
       {
@@ -40,6 +43,7 @@ class HomeScreen extends StatelessWidget {
         "price": "₹25/Kg",
         "farmer": "Naresh",
         "location": "Anantapur",
+        "quantity": "300 Kg",
       },
 
     ];
@@ -132,6 +136,9 @@ class HomeScreen extends StatelessWidget {
 
                             location:
                                 product["location"]!,
+
+                            quantity:
+                                product["quantity"]!,
                           ),
                         ),
                       );
@@ -231,6 +238,10 @@ class HomeScreen extends StatelessWidget {
 
                             Text(
                               product["location"]!,
+                            ),
+
+                            Text(
+                              "Stock: ${product["quantity"]}",
                             ),
 
                             const Spacer(),
