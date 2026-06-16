@@ -21,15 +21,28 @@ class _MarketplaceScreenState
     final products = ProductData.products;
 
     final filteredProducts =
-        products.where((product) {
+    products.where((product) {
 
-      return (product["name"] ?? "")
-          .toLowerCase()
-          .contains(
-            searchText.toLowerCase(),
-          );
+  final name =
+      (product["name"] ?? "")
+          .toLowerCase();
 
-    }).toList();
+  final farmer =
+      (product["farmer"] ?? "")
+          .toLowerCase();
+
+  final location =
+      (product["location"] ?? "")
+          .toLowerCase();
+
+  final query =
+      searchText.toLowerCase();
+
+  return name.contains(query) ||
+      farmer.contains(query) ||
+      location.contains(query);
+
+}).toList();
 
     return Scaffold(
 
@@ -57,7 +70,8 @@ class _MarketplaceScreenState
 
               decoration: InputDecoration(
 
-                hintText: "Search Products",
+                hintText:
+    "Search Product, Farmer or Location",
 
                 prefixIcon:
                     const Icon(Icons.search),
