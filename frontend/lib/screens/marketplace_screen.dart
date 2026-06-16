@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/product_data.dart';
+import '../utils/favorites_data.dart';
 import 'product_details_screen.dart';
 
 class MarketplaceScreen extends StatefulWidget {
@@ -56,54 +57,6 @@ class _MarketplaceScreenState
       );
     }
 
-    if (selectedSort == "Low-High") {
-
-      filteredProducts.sort(
-        (a, b) {
-
-          final p1 = int.tryParse(
-                  (a["price"] ?? "")
-                      .replaceAll(
-                          RegExp(r'[^0-9]'),
-                          '')) ??
-              0;
-
-          final p2 = int.tryParse(
-                  (b["price"] ?? "")
-                      .replaceAll(
-                          RegExp(r'[^0-9]'),
-                          '')) ??
-              0;
-
-          return p1.compareTo(p2);
-        },
-      );
-    }
-
-    if (selectedSort == "High-Low") {
-
-      filteredProducts.sort(
-        (a, b) {
-
-          final p1 = int.tryParse(
-                  (a["price"] ?? "")
-                      .replaceAll(
-                          RegExp(r'[^0-9]'),
-                          '')) ??
-              0;
-
-          final p2 = int.tryParse(
-                  (b["price"] ?? "")
-                      .replaceAll(
-                          RegExp(r'[^0-9]'),
-                          '')) ??
-              0;
-
-          return p2.compareTo(p1);
-        },
-      );
-    }
-
     return Scaffold(
 
       appBar: AppBar(
@@ -134,16 +87,6 @@ class _MarketplaceScreenState
                 DropdownMenuItem(
                   value: "A-Z",
                   child: Text("Name A-Z"),
-                ),
-
-                DropdownMenuItem(
-                  value: "Low-High",
-                  child: Text("Price Low-High"),
-                ),
-
-                DropdownMenuItem(
-                  value: "High-Low",
-                  child: Text("Price High-Low"),
                 ),
               ],
 
@@ -199,7 +142,7 @@ class _MarketplaceScreenState
                   crossAxisCount: 2,
                   crossAxisSpacing: 15,
                   mainAxisSpacing: 15,
-                  childAspectRatio: 0.9,
+                  childAspectRatio: 0.95,
                 ),
 
                 itemBuilder:
@@ -208,137 +151,125 @@ class _MarketplaceScreenState
                   final product =
                       filteredProducts[index];
 
-                  return InkWell(
+                  return Card(
 
-                    onTap: () {
+                    elevation: 5,
 
-                      Navigator.push(
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.all(10),
 
-                        context,
+                      child: Column(
 
-                        MaterialPageRoute(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center,
 
-                          builder: (_) =>
-                              ProductDetailsScreen(
+                        children: [
 
-                            name:
-                                product["name"] ?? "",
-
-                            price:
-                                product["price"] ?? "",
-
-                            farmer:
-                                product["farmer"] ?? "Farmer",
-
-                            location:
-                                product["location"] ?? "",
-
-                            quantity:
-                                product["quantity"] ?? "",
-
-                            imageBytes:
-                                product["imageBytes"],
+                          const Icon(
+                            Icons.shopping_bag,
+                            size: 50,
+                            color: Colors.green,
                           ),
-                        ),
-                      );
-                    },
 
-                    child: Card(
+                          const SizedBox(height: 10),
 
-                      elevation: 5,
+                          Text(
 
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.all(15),
+                            product["name"] ?? "",
 
-                        child: Column(
+                            textAlign:
+                                TextAlign.center,
 
-                          mainAxisAlignment:
-                              MainAxisAlignment.center,
+                            style:
+                                const TextStyle(
+                              fontSize: 18,
+                              fontWeight:
+                                  FontWeight.bold,
+                            ),
+                          ),
 
-                          children: [
+                          const SizedBox(height: 5),
 
-                            const Icon(
-                              Icons.shopping_bag,
-                              size: 60,
-                              color: Colors.green,
+                          Text(
+                            product["price"] ?? "",
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          Text(
+
+                            product["quantity"] ?? "",
+
+                            style:
+                                const TextStyle(
+                              color:
+                                  Colors.green,
+                              fontWeight:
+                                  FontWeight.bold,
+                            ),
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          IconButton(
+
+                            icon: const Icon(
+                              Icons.favorite_border,
+                              color: Colors.red,
                             ),
 
-                            const SizedBox(height: 15),
+                            onPressed: () {
 
-                            Text(
+                              FavoritesData
+                                  .favoriteProducts
+                                  .add(product);
 
-                              product["name"] ?? "",
+                              ScaffoldMessenger.of(
+                                      context)
+                                  .showSnackBar(
 
-                              textAlign:
-                                  TextAlign.center,
+                                SnackBar(
 
-                              style:
-                                  const TextStyle(
-                                fontSize: 18,
-                                fontWeight:
-                                    FontWeight.bold,
-                              ),
-                            ),
+                                  content: Text(
+                                    "${product["name"]} added to favorites ❤️",
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
 
-                            const SizedBox(height: 10),
+                          SizedBox(
 
-                            Text(
+                            width:
+                                double.infinity,
 
-                              product["price"] ?? "",
+                            child:
+                                ElevatedButton(
 
-                              style:
-                                  const TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
-                            ),
+                              onPressed: () {
 
-                            const SizedBox(height: 5),
+                                ScaffoldMessenger.of(
+                                        context)
+                                    .showSnackBar(
 
-                            Text(
+                                  SnackBar(
 
-                              product["quantity"] ?? "",
-
-                              style:
-                                  const TextStyle(
-                                fontSize: 14,
-                                color: Colors.green,
-                                fontWeight:
-                                    FontWeight.bold,
-                              ),
-                            ),
-
-                            const SizedBox(height: 15),
-
-                            SizedBox(
-
-                              width: double.infinity,
-
-                              child: ElevatedButton(
-
-                                onPressed: () {
-
-                                  ScaffoldMessenger.of(
-                                          context)
-                                      .showSnackBar(
-
-                                    SnackBar(
-
-                                      content: Text(
-                                        "${product["name"]} added to cart",
-                                      ),
+                                    content: Text(
+                                      "${product["name"]} added to cart",
                                     ),
-                                  );
-                                },
+                                  ),
+                                );
+                              },
 
-                                child:
-                                    const Text("Buy"),
+                              child:
+                                  const Text(
+                                "Buy",
                               ),
                             ),
+                          ),
 
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                   );

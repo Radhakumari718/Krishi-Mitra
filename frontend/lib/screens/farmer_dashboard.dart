@@ -16,6 +16,7 @@ import 'soil_screen.dart';
 import 'help_support_screen.dart';
 import 'sell_product_screen.dart';
 import 'cart_screen.dart';
+import 'favorites_screen.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({super.key});
@@ -139,6 +140,13 @@ class FarmerDashboard extends StatelessWidget {
                     Icons.store,
                     "Marketplace",
                     const MarketplaceScreen(),
+                  ),
+
+                  dashboardItem(
+                    context,
+                    Icons.favorite,
+                    "Favorites",
+                    const FavoritesScreen(),
                   ),
 
                   dashboardItem(
