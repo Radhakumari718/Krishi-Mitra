@@ -1,4 +1,5 @@
 class ProductData {
+
   static List<Map<String, dynamic>> products = [
 
     {
@@ -20,4 +21,12 @@ class ProductData {
     },
 
   ];
+
+  static void loadProducts(
+      List<Map<String, dynamic>> savedProducts) {
+
+    if (savedProducts.isNotEmpty) {
+      products = savedProducts;
+    }
+  }
 }

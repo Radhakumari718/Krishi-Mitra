@@ -33,6 +33,7 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   image_picker: ^1.1.2
+  shared_preferences: ^2.2.3
   http: ^1.2.1
   http_parser: ^4.0.2
 dev_dependencies:

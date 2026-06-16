@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../utils/product_data.dart';
+import '../utils/storage_service.dart';
 
 class SellProductScreen extends StatefulWidget {
   const SellProductScreen({
@@ -51,42 +52,46 @@ class _SellProductScreenState
     }
   }
 
-  void uploadProduct() {
+ void uploadProduct() {
 
-    ProductData.products.add({
+  ProductData.products.add({
 
-      "name": cropController.text,
+    "name": cropController.text,
 
-      "price": "₹${priceController.text}",
+    "price": "₹${priceController.text}",
 
-      "quantity": quantityController.text,
+    "quantity": quantityController.text,
 
-      "location": locationController.text,
+    "location": locationController.text,
 
-      "farmer": farmerController.text,
+    "farmer": farmerController.text,
 
-      "imageBytes": imageBytes,
-    });
+    "imageBytes": imageBytes,
+  });
 
-    ScaffoldMessenger.of(context).showSnackBar(
+  StorageService.saveProducts(
+    ProductData.products,
+  );
 
-      const SnackBar(
-        content: Text(
-          "Product Uploaded Successfully 🌾",
-        ),
+  ScaffoldMessenger.of(context).showSnackBar(
+
+    const SnackBar(
+      content: Text(
+        "Product Uploaded Successfully 🌾",
       ),
-    );
+    ),
+  );
 
-    farmerController.clear();
-    cropController.clear();
-    quantityController.clear();
-    priceController.clear();
-    locationController.clear();
+  farmerController.clear();
+  cropController.clear();
+  quantityController.clear();
+  priceController.clear();
+  locationController.clear();
 
-    setState(() {
-      imageBytes = null;
-    });
-  }
+  setState(() {
+    imageBytes = null;
+  });
+}
 
   @override
   Widget build(BuildContext context) {
