@@ -166,11 +166,21 @@ class _MarketplaceScreenState
 
                         children: [
 
-                          const Icon(
-                            Icons.shopping_bag,
-                            size: 50,
-                            color: Colors.green,
-                          ),
+                          product["imageBytes"] != null
+    ? ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.memory(
+          product["imageBytes"],
+          height: 70,
+          width: 70,
+          fit: BoxFit.cover,
+        ),
+      )
+    : const Icon(
+        Icons.shopping_bag,
+        size: 60,
+        color: Colors.green,
+      ),
 
                           const SizedBox(height: 10),
 

@@ -1,7 +1,4 @@
-import 'dart:typed_data';
-
 class ProductData {
-
   static List<Map<String, dynamic>> products = [
 
     {
