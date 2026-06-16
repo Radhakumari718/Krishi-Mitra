@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
-
 import 'product_details_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
 
   const HomeScreen({
     super.key,
   });
+
+  @override
+  State<HomeScreen> createState() =>
+      _HomeScreenState();
+}
+
+class _HomeScreenState
+    extends State<HomeScreen> {
+
+  String searchText = "";
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +57,17 @@ class HomeScreen extends StatelessWidget {
 
     ];
 
+    final filteredProducts =
+        products.where((product) {
+
+      return product["name"]!
+          .toLowerCase()
+          .contains(
+            searchText.toLowerCase(),
+          );
+
+    }).toList();
+
     return Scaffold(
 
       appBar: AppBar(
@@ -67,6 +87,14 @@ class HomeScreen extends StatelessWidget {
           children: [
 
             TextField(
+
+              onChanged: (value) {
+
+                setState(() {
+
+                  searchText = value;
+                });
+              },
 
               decoration:
                   InputDecoration(
@@ -95,7 +123,7 @@ class HomeScreen extends StatelessWidget {
               child: GridView.builder(
 
                 itemCount:
-                    products.length,
+                    filteredProducts.length,
 
                 gridDelegate:
                     const SliverGridDelegateWithFixedCrossAxisCount(
@@ -110,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                     (context, index) {
 
                   final product =
-                      products[index];
+                      filteredProducts[index];
 
                   return GestureDetector(
 
