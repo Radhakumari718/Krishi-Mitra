@@ -14,6 +14,7 @@ class _MarketplaceScreenState
     extends State<MarketplaceScreen> {
 
   String searchText = "";
+  String selectedSort = "Default";
 
   @override
   Widget build(BuildContext context) {
@@ -21,28 +22,87 @@ class _MarketplaceScreenState
     final products = ProductData.products;
 
     final filteredProducts =
-    products.where((product) {
+        products.where((product) {
 
-  final name =
-      (product["name"] ?? "")
-          .toLowerCase();
+      final name =
+          (product["name"] ?? "")
+              .toLowerCase();
 
-  final farmer =
-      (product["farmer"] ?? "")
-          .toLowerCase();
+      final farmer =
+          (product["farmer"] ?? "")
+              .toLowerCase();
 
-  final location =
-      (product["location"] ?? "")
-          .toLowerCase();
+      final location =
+          (product["location"] ?? "")
+              .toLowerCase();
 
-  final query =
-      searchText.toLowerCase();
+      final query =
+          searchText.toLowerCase();
 
-  return name.contains(query) ||
-      farmer.contains(query) ||
-      location.contains(query);
+      return name.contains(query) ||
+          farmer.contains(query) ||
+          location.contains(query);
 
-}).toList();
+    }).toList();
+
+    if (selectedSort == "A-Z") {
+
+      filteredProducts.sort(
+        (a, b) =>
+            (a["name"] ?? "")
+                .compareTo(
+          b["name"] ?? "",
+        ),
+      );
+    }
+
+    if (selectedSort == "Low-High") {
+
+      filteredProducts.sort(
+        (a, b) {
+
+          final p1 = int.tryParse(
+                  (a["price"] ?? "")
+                      .replaceAll(
+                          RegExp(r'[^0-9]'),
+                          '')) ??
+              0;
+
+          final p2 = int.tryParse(
+                  (b["price"] ?? "")
+                      .replaceAll(
+                          RegExp(r'[^0-9]'),
+                          '')) ??
+              0;
+
+          return p1.compareTo(p2);
+        },
+      );
+    }
+
+    if (selectedSort == "High-Low") {
+
+      filteredProducts.sort(
+        (a, b) {
+
+          final p1 = int.tryParse(
+                  (a["price"] ?? "")
+                      .replaceAll(
+                          RegExp(r'[^0-9]'),
+                          '')) ??
+              0;
+
+          final p2 = int.tryParse(
+                  (b["price"] ?? "")
+                      .replaceAll(
+                          RegExp(r'[^0-9]'),
+                          '')) ??
+              0;
+
+          return p2.compareTo(p1);
+        },
+      );
+    }
 
     return Scaffold(
 
@@ -58,6 +118,46 @@ class _MarketplaceScreenState
 
           children: [
 
+            DropdownButton<String>(
+
+              value: selectedSort,
+
+              isExpanded: true,
+
+              items: const [
+
+                DropdownMenuItem(
+                  value: "Default",
+                  child: Text("Default"),
+                ),
+
+                DropdownMenuItem(
+                  value: "A-Z",
+                  child: Text("Name A-Z"),
+                ),
+
+                DropdownMenuItem(
+                  value: "Low-High",
+                  child: Text("Price Low-High"),
+                ),
+
+                DropdownMenuItem(
+                  value: "High-Low",
+                  child: Text("Price High-Low"),
+                ),
+              ],
+
+              onChanged: (value) {
+
+                setState(() {
+
+                  selectedSort = value!;
+                });
+              },
+            ),
+
+            const SizedBox(height: 15),
+
             TextField(
 
               onChanged: (value) {
@@ -71,7 +171,7 @@ class _MarketplaceScreenState
               decoration: InputDecoration(
 
                 hintText:
-    "Search Product, Farmer or Location",
+                    "Search Product, Farmer or Location",
 
                 prefixIcon:
                     const Icon(Icons.search),
