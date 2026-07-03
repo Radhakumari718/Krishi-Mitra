@@ -1,213 +1,137 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../utils/product_data.dart';
 import '../utils/storage_service.dart';
 
 class SellProductScreen extends StatefulWidget {
-  const SellProductScreen({
-    super.key,
-  });
-
+  const SellProductScreen({super.key});
   @override
-  State<SellProductScreen> createState() =>
-      _SellProductScreenState();
+  State<SellProductScreen> createState() => _SellProductScreenState();
 }
 
-class _SellProductScreenState
-    extends State<SellProductScreen> {
-
-  final TextEditingController farmerController =
-      TextEditingController();
-
-  final TextEditingController cropController =
-      TextEditingController();
-
-  final TextEditingController quantityController =
-      TextEditingController();
-
-  final TextEditingController priceController =
-      TextEditingController();
-
-  final TextEditingController locationController =
-      TextEditingController();
-
+class _SellProductScreenState extends State<SellProductScreen> {
+  final farmerController = TextEditingController();
+  final cropController = TextEditingController();
+  final quantityController = TextEditingController();
+  final priceController = TextEditingController();
+  final locationController = TextEditingController();
   Uint8List? imageBytes;
-
-  final ImagePicker picker = ImagePicker();
+  final picker = ImagePicker();
 
   Future<void> pickImage() async {
-
-    final image = await picker.pickImage(
-      source: ImageSource.gallery,
-    );
-
+    final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-
       imageBytes = await image.readAsBytes();
-
       setState(() {});
     }
   }
 
- void uploadProduct() {
-
-  ProductData.products.add({
-
-    "name": cropController.text,
-
-    "price": "₹${priceController.text}",
-
-    "quantity": quantityController.text,
-
-    "location": locationController.text,
-
-    "farmer": farmerController.text,
-
-    "imageBytes": imageBytes,
-  });
-
-  StorageService.saveProducts(
-    ProductData.products,
-  );
-
-  ScaffoldMessenger.of(context).showSnackBar(
-
-    const SnackBar(
-      content: Text(
-        "Product Uploaded Successfully 🌾",
-      ),
-    ),
-  );
-
-  farmerController.clear();
-  cropController.clear();
-  quantityController.clear();
-  priceController.clear();
-  locationController.clear();
-
-  setState(() {
-    imageBytes = null;
-  });
-}
+  void uploadProduct() {
+    if (cropController.text.trim().isEmpty || priceController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fill in crop name and price')));
+      return;
+    }
+    ProductData.products.add({
+      'name': cropController.text,
+      'price': '₹${priceController.text}',
+      'quantity': quantityController.text,
+      'location': locationController.text,
+      'farmer': farmerController.text,
+      'imageBytes': imageBytes,
+    });
+    StorageService.saveProducts(ProductData.products);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Product listed successfully 🌾'), backgroundColor: Color(0xFF1a6b2e)),
+    );
+    farmerController.clear();
+    cropController.clear();
+    quantityController.clear();
+    priceController.clear();
+    locationController.clear();
+    setState(() => imageBytes = null);
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
+      backgroundColor: const Color(0xFFF2F3F5),
       appBar: AppBar(
-        title: const Text("Sell Product"),
-        backgroundColor: Colors.green,
+        title: const Text('List a product'),
+        backgroundColor: const Color(0xFF1a6b2e),
+        foregroundColor: Colors.white,
       ),
-
       body: SingleChildScrollView(
-
-        padding: const EdgeInsets.all(20),
-
+        padding: const EdgeInsets.all(16),
         child: Column(
-
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            const Icon(
-              Icons.store,
-              size: 100,
-              color: Colors.green,
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: farmerController,
-              decoration: const InputDecoration(
-                labelText: "Farmer Name",
-                border: OutlineInputBorder(),
+            GestureDetector(
+              onTap: pickImage,
+              child: Container(
+                height: 180,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: const Color(0xFF1a6b2e), width: 1.5, style: BorderStyle.solid),
+                ),
+                child: imageBytes != null
+                    ? ClipRRect(borderRadius: BorderRadius.circular(14), child: Image.memory(imageBytes!, fit: BoxFit.cover, width: double.infinity))
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.add_a_photo_outlined, size: 36, color: Color(0xFF1a6b2e)),
+                          SizedBox(height: 8),
+                          Text('Add product photo', style: TextStyle(color: Color(0xFF1a6b2e), fontWeight: FontWeight.w600)),
+                        ],
+                      ),
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: cropController,
-              decoration: const InputDecoration(
-                labelText: "Crop Name",
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: quantityController,
-              decoration: const InputDecoration(
-                labelText: "Quantity",
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: priceController,
-              decoration: const InputDecoration(
-                labelText: "Price",
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: locationController,
-              decoration: const InputDecoration(
-                labelText: "Location",
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            ElevatedButton.icon(
-
-              onPressed: pickImage,
-
-              icon: const Icon(Icons.image),
-
-              label: const Text(
-                "Choose Product Image",
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            if (imageBytes != null)
-
-              Image.memory(
-                imageBytes!,
-                height: 200,
-              ),
-
-            const SizedBox(height: 30),
-
+            const SizedBox(height: 18),
+            _sectionCard([
+              _field(farmerController, 'Farmer name', Icons.person_outline),
+              _field(cropController, 'Crop / product name', Icons.eco_outlined),
+              _field(quantityController, 'Quantity available (e.g. 100 kg)', Icons.inventory_2_outlined),
+              _field(priceController, 'Price (₹ per unit)', Icons.currency_rupee, keyboardType: TextInputType.number),
+              _field(locationController, 'Location / village', Icons.location_on_outlined, last: true),
+            ]),
+            const SizedBox(height: 22),
             SizedBox(
               width: double.infinity,
-
+              height: 52,
               child: ElevatedButton(
-
                 onPressed: uploadProduct,
-
-                child: const Text(
-                  "Upload Product",
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1a6b2e), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                child: const Text('List product', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
             ),
-
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionCard(List<Widget> children) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6)]),
+      child: Column(children: children),
+    );
+  }
+
+  Widget _field(TextEditingController controller, String label, IconData icon, {TextInputType? keyboardType, bool last = false}) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: last ? 0 : 14),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon, color: const Color(0xFF1a6b2e), size: 20),
+          filled: true,
+          fillColor: const Color(0xFFF5F5F5),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
         ),
       ),
     );

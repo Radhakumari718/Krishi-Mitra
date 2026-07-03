@@ -47,7 +47,7 @@ disease_solutions = {
         "prevention": "Continue good farming practices"
     },
 
-    "Potato_Late_blight": {
+    "Potato___Late_blight": {
         "solution": "Spray fungicide immediately",
         "prevention": "Use disease-free seed and avoid excess moisture"
     }

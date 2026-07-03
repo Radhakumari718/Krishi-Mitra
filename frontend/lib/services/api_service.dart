@@ -1,10 +1,26 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  static const String baseUrl = "http://127.0.0.1:8000";
+  static String baseUrl = _getDefaultBaseUrl();
+
+  static String _getDefaultBaseUrl() {
+    if (kIsWeb) {
+      return "http://localhost:8000";
+    } else if (Platform.isAndroid) {
+      return "http://10.0.2.2:8000";
+    } else {
+      return "http://127.0.0.1:8000";
+    }
+  }
+
+  static void setBaseUrl(String newUrl) {
+    baseUrl = newUrl;
+  }
 
   // --------------------------------
   // CHATBOT API

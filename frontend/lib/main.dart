@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'utils/storage_service.dart';
+import 'utils/product_data.dart';
 
 import 'screens/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    final savedProducts = await StorageService.loadProducts();
+    ProductData.loadProducts(savedProducts);
+  } catch (e) {
+    debugPrint("Failed to load cached products: $e");
+  }
 
   runApp(
     const MyApp(),

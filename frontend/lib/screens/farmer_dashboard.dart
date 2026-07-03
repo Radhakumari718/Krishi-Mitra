@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'login_screen.dart';
 import 'weather_screen.dart';
 import 'marketplace_screen.dart';
@@ -24,264 +23,194 @@ class FarmerDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Krishi Mithra"),
-        backgroundColor: Colors.green,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.language),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      const LanguageScreen(),
-                ),
-              );
-            },
-          ),
-
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      const NotificationScreen(),
-                ),
-              );
-            },
-          ),
-
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      const ProfileScreen(),
-                ),
-              );
-            },
-          ),
-
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      const LoginScreen(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-
-        child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
-
-          children: [
-
-            const Text(
-              "Welcome Farmer 👨‍🌾",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight:
-                    FontWeight.bold,
-                color: Colors.green,
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            const Text(
-              "Direct Farmer To Buyer Platform",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black54,
-              ),
-            ),
-
-            const SizedBox(height: 25),
-
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 15,
-                mainAxisSpacing: 15,
-
+      backgroundColor: const Color(0xFFF2F3F5),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 160,
+            pinned: true,
+            backgroundColor: const Color(0xFF1a6b2e),
+            actions: [
+              IconButton(icon: const Icon(Icons.language, color: Colors.white), onPressed: () => _push(context, const LanguageScreen())),
+              Stack(
                 children: [
+                  IconButton(icon: const Icon(Icons.notifications_outlined, color: Colors.white), onPressed: () => _push(context, const NotificationScreen())),
+                  Positioned(top: 8, right: 8, child: Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFFf0a500), shape: BoxShape.circle))),
+                ],
+              ),
+              IconButton(icon: const Icon(Icons.logout_outlined, color: Colors.white), onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()))),
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: const BoxDecoration(color: Color(0xFF1a6b2e)),
+                padding: const EdgeInsets.fromLTRB(20, 90, 20, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 46, height: 46,
+                          decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
+                          child: const Center(child: Text('R', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white))),
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text('Good morning, Ramesh 👨‍🌾', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                            SizedBox(height: 2),
+                            Text('Guntur, Andhra Pradesh', style: TextStyle(fontSize: 12, color: Colors.white70)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
 
-                  dashboardItem(
-                    context,
-                    Icons.sell,
-                    "Sell\nProducts",
-                    const SellProductScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.shopping_cart,
-                    "My\nCart",
-                    const CartScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.store,
-                    "Marketplace",
-                    const MarketplaceScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.favorite,
-                    "Favorites",
-                    const FavoritesScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.agriculture,
-                    "Crop\nRecommendation",
-                    const CropRecommendationScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.cloud,
-                    "Weather\nAlerts",
-                    const WeatherScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.chat,
-                    "AI\nChatbot",
-                    const ChatbotScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.show_chart,
-                    "Price\nPrediction",
-                    const PricePredictionScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.health_and_safety,
-                    "Disease\nDetection",
-                    const DiseaseDetectionScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.lightbulb,
-                    "Farming\nTips",
-                    const TipsScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.account_balance,
-                    "Govt\nSchemes",
-                    const SchemesScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.landscape,
-                    "Soil\nInformation",
-                    const SoilScreen(),
-                  ),
-
-                  dashboardItem(
-                    context,
-                    Icons.support_agent,
-                    "Help &\nSupport",
-                    const HelpSupportScreen(),
-                  ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  _statCard('₹12,400', 'This month', Icons.currency_rupee),
+                  const SizedBox(width: 10),
+                  _statCard('47', 'Total orders', Icons.receipt_long_outlined),
+                  const SizedBox(width: 10),
+                  _statCard('4.8★', 'Rating', Icons.star_outline),
                 ],
               ),
             ),
+          ),
+
+          SliverToBoxAdapter(
+            child: GestureDetector(
+              onTap: () => _push(context, const SellProductScreen()),
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF8E1),
+                  border: Border.all(color: const Color(0xFFf0a500)),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.add_circle_outline, color: Color(0xFF856404), size: 28),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text('List a new product', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF856404), fontSize: 15)),
+                        SizedBox(height: 2),
+                        Text('Sell directly. Zero commission.', style: TextStyle(fontSize: 12, color: Color(0xFFa07800))),
+                      ],
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(color: const Color(0xFFf0a500), borderRadius: BorderRadius.circular(8)),
+                      child: const Text('Start', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 13)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
+              child: const Text('Quick access', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+          ),
+
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, childAspectRatio: 1.6,
+              ),
+              delegate: SliverChildListDelegate([
+                _menuCard(context, Icons.agriculture_outlined, 'Crop advisor', 'AI recommendation', const Color(0xFFE8F5E9), const CropRecommendationScreen()),
+                _menuCard(context, Icons.biotech_outlined, 'Disease check', 'Scan your crop', const Color(0xFFFCE4EC), const DiseaseDetectionScreen()),
+                _menuCard(context, Icons.show_chart, 'Price tracker', 'Market rates', const Color(0xFFFFF8E1), const PricePredictionScreen()),
+                _menuCard(context, Icons.cloud_outlined, 'Weather', '7-day forecast', const Color(0xFFE3F2FD), const WeatherScreen()),
+                _menuCard(context, Icons.chat_bubble_outline, 'AI chatbot', 'Ask anything', const Color(0xFFF3E5F5), const ChatbotScreen()),
+                _menuCard(context, Icons.account_balance_outlined, 'Govt schemes', 'Your benefits', const Color(0xFFE0F2F1), const SchemesScreen()),
+                _menuCard(context, Icons.lightbulb_outline, 'Farming tips', 'Best practices', const Color(0xFFFBE9E7), const TipsScreen()),
+                _menuCard(context, Icons.landscape_outlined, 'Soil info', 'Know your land', const Color(0xFFE8EAF6), const SoilScreen()),
+                _menuCard(context, Icons.store_outlined, 'Marketplace', 'Browse & buy', const Color(0xFFE8F5E9), const MarketplaceScreen()),
+                _menuCard(context, Icons.favorite_outline, 'Favourites', 'Saved items', const Color(0xFFFCE4EC), const FavoritesScreen()),
+                _menuCard(context, Icons.shopping_cart_outlined, 'My cart', 'View cart', const Color(0xFFFFF8E1), const CartScreen()),
+                _menuCard(context, Icons.support_agent_outlined, 'Help & support', 'Get assistance', const Color(0xFFF3E5F5), const HelpSupportScreen()),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _push(BuildContext context, Widget screen) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+  }
+
+  Widget _statCard(String value, String label, IconData icon) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6)],
+        ),
+        child: Column(
+          children: [
+            Icon(icon, size: 20, color: const Color(0xFF1a6b2e)),
+            const SizedBox(height: 6),
+            Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1a6b2e))),
+            const SizedBox(height: 2),
+            Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey), textAlign: TextAlign.center),
           ],
         ),
       ),
     );
   }
 
-  Widget dashboardItem(
-    BuildContext context,
-    IconData icon,
-    String title,
-    Widget screen,
-  ) {
+  Widget _menuCard(BuildContext context, IconData icon, String title, String sub, Color bg, Widget screen) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => screen,
-          ),
-        );
-      },
-
-      child: Card(
-        elevation: 5,
-
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius:
-                BorderRadius.circular(15),
-
-            gradient: LinearGradient(
-              colors: [
-                Colors.green.shade400,
-                Colors.green.shade700,
-              ],
-
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => screen)),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6)],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42, height: 42,
+              decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(10)),
+              child: Icon(icon, color: const Color(0xFF1a6b2e), size: 22),
             ),
-          ),
-
-          child: Column(
-            mainAxisAlignment:
-                MainAxisAlignment.center,
-
-            children: [
-
-              Icon(
-                icon,
-                size: 50,
-                color: Colors.white,
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 2),
+                  Text(sub, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                ],
               ),
-
-              const SizedBox(height: 15),
-
-              Text(
-                title,
-                textAlign: TextAlign.center,
-
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight:
-                      FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
