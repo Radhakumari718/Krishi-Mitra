@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'login_screen.dart';
 import 'weather_screen.dart';
 import 'marketplace_screen.dart';
@@ -17,11 +18,55 @@ import 'sell_product_screen.dart';
 import 'cart_screen.dart';
 import 'favorites_screen.dart';
 
-class FarmerDashboard extends StatelessWidget {
+class FarmerDashboard extends StatefulWidget {
   const FarmerDashboard({super.key});
 
   @override
+  State<FarmerDashboard> createState() => _FarmerDashboardState();
+}
+
+class _FarmerDashboardState extends State<FarmerDashboard> {
+  final supabase = Supabase.instance.client;
+
+  String _fullName = '';
+  String _location = '';
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final userId = supabase.auth.currentUser?.id;
+      if (userId == null) return;
+
+      final data = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', userId)
+          .single();
+
+      setState(() {
+        _fullName = data['full_name'] ?? 'Farmer';
+        _location = data['location'] ?? '';
+        _isLoading = false;
+      });
+    } catch (e) {
+      debugPrint('Failed to load profile: $e');
+      setState(() {
+        _fullName = 'Farmer';
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final initial = _fullName.isNotEmpty ? _fullName[0].toUpperCase() : 'F';
+
     return Scaffold(
       backgroundColor: const Color(0xFFF2F3F5),
       body: CustomScrollView(
@@ -38,7 +83,14 @@ class FarmerDashboard extends StatelessWidget {
                   Positioned(top: 8, right: 8, child: Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFFf0a500), shape: BoxShape.circle))),
                 ],
               ),
-              IconButton(icon: const Icon(Icons.logout_outlined, color: Colors.white), onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()))),
+              IconButton(
+                icon: const Icon(Icons.logout_outlined, color: Colors.white),
+                onPressed: () async {
+                  await supabase.auth.signOut();
+                  if (!mounted) return;
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+                },
+              ),
             ],
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -52,15 +104,18 @@ class FarmerDashboard extends StatelessWidget {
                         Container(
                           width: 46, height: 46,
                           decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
-                          child: const Center(child: Text('R', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white))),
+                          child: Center(child: Text(initial, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white))),
                         ),
                         const SizedBox(width: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text('Good morning, Ramesh 👨‍🌾', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                            SizedBox(height: 2),
-                            Text('Guntur, Andhra Pradesh', style: TextStyle(fontSize: 12, color: Colors.white70)),
+                          children: [
+                            Text(
+                              _isLoading ? 'Good morning 👨‍🌾' : 'Good morning, $_fullName 👨‍🌾',
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(_location, style: const TextStyle(fontSize: 12, color: Colors.white70)),
                           ],
                         ),
                       ],
