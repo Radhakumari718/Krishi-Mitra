@@ -16,6 +16,7 @@ void main() async {
   try {
     final savedProducts = await StorageService.loadProducts();
     ProductData.loadProducts(savedProducts);
+    await ProductData.fetchProducts(); // Supabase nundi products fetch cheయడం
   } catch (e) {
     debugPrint("Failed to load cached products: $e");
   }

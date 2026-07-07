@@ -18,6 +18,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
   final locationController = TextEditingController();
   Uint8List? imageBytes;
   final picker = ImagePicker();
+  bool isUploading = false;
 
   Future<void> pickImage() async {
     final image = await picker.pickImage(source: ImageSource.gallery);
@@ -27,29 +28,44 @@ class _SellProductScreenState extends State<SellProductScreen> {
     }
   }
 
-  void uploadProduct() {
+  Future<void> uploadProduct() async {
     if (cropController.text.trim().isEmpty || priceController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fill in crop name and price')));
       return;
     }
-    ProductData.products.add({
-      'name': cropController.text,
-      'price': '₹${priceController.text}',
-      'quantity': quantityController.text,
-      'location': locationController.text,
-      'farmer': farmerController.text,
-      'imageBytes': imageBytes,
-    });
-    StorageService.saveProducts(ProductData.products);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Product listed successfully 🌾'), backgroundColor: Color(0xFF1a6b2e)),
-    );
-    farmerController.clear();
-    cropController.clear();
-    quantityController.clear();
-    priceController.clear();
-    locationController.clear();
-    setState(() => imageBytes = null);
+
+    setState(() => isUploading = true);
+
+    try {
+      await ProductData.addProduct({
+        'name': cropController.text,
+        'price': '₹${priceController.text}',
+        'quantity': quantityController.text,
+        'location': locationController.text,
+        'farmer': farmerController.text,
+        'image_url': null, // image upload to Supabase Storage will be added later
+      });
+
+      // keep local cache updated too
+      await StorageService.saveProducts(ProductData.products);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Product listed successfully 🌾'), backgroundColor: Color(0xFF1a6b2e)),
+      );
+
+      farmerController.clear();
+      cropController.clear();
+      quantityController.clear();
+      priceController.clear();
+      locationController.clear();
+      setState(() => imageBytes = null);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to list product: $e')),
+      );
+    } finally {
+      setState(() => isUploading = false);
+    }
   }
 
   @override
@@ -101,9 +117,11 @@ class _SellProductScreenState extends State<SellProductScreen> {
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: uploadProduct,
+                onPressed: isUploading ? null : uploadProduct,
                 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1a6b2e), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                child: const Text('List product', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                child: isUploading
+                    ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                    : const Text('List product', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
             ),
           ],
