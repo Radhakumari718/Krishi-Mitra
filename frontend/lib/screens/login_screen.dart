@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'bottom_nav_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -10,17 +11,74 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
+  final _nameCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController();
+  final _locationCtrl = TextEditingController();
   bool _obscure = true;
   bool _isLoading = false;
+  bool _isSignUp = false;
 
-  void _login() async {
+  final supabase = Supabase.instance.client;
+
+  Future<void> _login() async {
+    if (_emailCtrl.text.trim().isEmpty || _passCtrl.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter email and password')),
+      );
+      return;
+    }
+    if (_isSignUp && _nameCtrl.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your name')),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 800));
-    if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const BottomNavScreen()),
-    );
+
+    try {
+      if (_isSignUp) {
+        final response = await supabase.auth.signUp(
+          email: _emailCtrl.text.trim(),
+          password: _passCtrl.text.trim(),
+        );
+
+        if (response.user != null) {
+          await supabase.from('profiles').insert({
+            'id': response.user!.id,
+            'full_name': _nameCtrl.text.trim(),
+            'phone': _phoneCtrl.text.trim(),
+            'location': _locationCtrl.text.trim(),
+          });
+
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Account created successfully 🌾')),
+          );
+        }
+      } else {
+        await supabase.auth.signInWithPassword(
+          email: _emailCtrl.text.trim(),
+          password: _passCtrl.text.trim(),
+        );
+      }
+
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const BottomNavScreen()),
+      );
+    } on AuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Something went wrong: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -53,11 +111,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Icon(Icons.agriculture, size: 38, color: Colors.white),
                   ),
                   const SizedBox(height: 20),
-                  const Text('Welcome back',
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text(_isSignUp ? 'Create account' : 'Welcome back',
+                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
                   const SizedBox(height: 6),
-                  const Text('Sign in to Krishi Mithra',
-                      style: TextStyle(fontSize: 15, color: Colors.white70)),
+                  Text(_isSignUp ? 'Sign up for Krishi Mithra' : 'Sign in to Krishi Mithra',
+                      style: const TextStyle(fontSize: 15, color: Colors.white70)),
                 ],
               ),
             ),
@@ -67,6 +125,57 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
+                  if (_isSignUp) ...[
+                    const Text('Full Name', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _nameCtrl,
+                      decoration: InputDecoration(
+                        hintText: 'Your name',
+                        prefixIcon: const Icon(Icons.person_outline, color: Color(0xFF1a6b2e)),
+                        filled: true,
+                        fillColor: const Color(0xFFF5F5F5),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text('Phone Number', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _phoneCtrl,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        hintText: '10-digit mobile number',
+                        prefixIcon: const Icon(Icons.phone_outlined, color: Color(0xFF1a6b2e)),
+                        filled: true,
+                        fillColor: const Color(0xFFF5F5F5),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text('Location', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _locationCtrl,
+                      decoration: InputDecoration(
+                        hintText: 'Village / Town',
+                        prefixIcon: const Icon(Icons.location_on_outlined, color: Color(0xFF1a6b2e)),
+                        filled: true,
+                        fillColor: const Color(0xFFF5F5F5),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                   const Text('Email', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
                   const SizedBox(height: 8),
                   TextField(
@@ -104,14 +213,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text('Forgot password?', style: TextStyle(color: Color(0xFF1a6b2e))),
+                  if (!_isSignUp) ...[
+                    const SizedBox(height: 12),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: const Text('Forgot password?', style: TextStyle(color: Color(0xFF1a6b2e))),
+                      ),
                     ),
-                  ),
+                  ],
                   const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
@@ -124,46 +235,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: _isLoading
                           ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                          : const Text('Sign in', style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600)),
+                          : Text(_isSignUp ? 'Create account' : 'Sign in',
+                              style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600)),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Text('or', style: TextStyle(color: Colors.grey.shade500)),
-                      ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: OutlinedButton.icon(
-                      onPressed: _login,
-                      icon: const Icon(Icons.phone_android, color: Color(0xFF1a6b2e)),
-                      label: const Text('Continue with phone', style: TextStyle(color: Color(0xFF1a6b2e), fontWeight: FontWeight.w600)),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF1a6b2e)),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 32),
                   Center(
                     child: TextButton(
-                      onPressed: _login,
+                      onPressed: () => setState(() => _isSignUp = !_isSignUp),
                       child: RichText(
-                        text: const TextSpan(
-                          text: "Don't have an account? ",
-                          style: TextStyle(color: Colors.black54),
+                        text: TextSpan(
+                          text: _isSignUp ? "Already have an account? " : "Don't have an account? ",
+                          style: const TextStyle(color: Colors.black54),
                           children: [
                             TextSpan(
-                              text: 'Register',
-                              style: TextStyle(color: Color(0xFF1a6b2e), fontWeight: FontWeight.w700),
+                              text: _isSignUp ? 'Sign in' : 'Register',
+                              style: const TextStyle(color: Color(0xFF1a6b2e), fontWeight: FontWeight.w700),
                             ),
                           ],
                         ),
