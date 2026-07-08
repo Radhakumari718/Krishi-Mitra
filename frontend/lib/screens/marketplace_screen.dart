@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/product_data.dart';
 import '../utils/favorites_data.dart';
 import 'cart_screen.dart';
 import 'product_details_screen.dart';
+import 'login_screen.dart';
 
 class MarketplaceScreen extends StatefulWidget {
   const MarketplaceScreen({super.key});
@@ -14,6 +16,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   String _searchText = '';
   String _selectedFilter = 'All';
   final List<String> _filters = ['All', 'Vegetables', 'Grains', 'Fruits', 'Organic', 'Near me'];
+  final supabase = Supabase.instance.client;
 
   final List<Map<String, dynamic>> _deals = [
     {'name': 'Tomatoes', 'price': '₹35/kg', 'mrp': '₹50/kg', 'farmer': 'Ramesh, Guntur', 'emoji': '🍅', 'tag': '30% off', 'bg': const Color(0xFFFFF8E1)},
@@ -21,6 +24,53 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     {'name': 'Red Onions', 'price': '₹22/kg', 'mrp': '₹30/kg', 'farmer': 'Naresh, Anantapur', 'emoji': '🧅', 'tag': 'Bulk deal', 'bg': const Color(0xFFFCE4EC)},
     {'name': 'Potatoes', 'price': '₹28/kg', 'mrp': '₹35/kg', 'farmer': 'Mahesh, Kurnool', 'emoji': '🥔', 'tag': 'New', 'bg': const Color(0xFFE3F2FD)},
   ];
+
+  Future<void> _addToCart(Map<String, dynamic> product) async {
+    final userId = supabase.auth.currentUser?.id;
+
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please sign in to add items to cart')),
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+      return;
+    }
+
+    try {
+      // Check if this product is already in the user's cart
+      final existing = await supabase
+          .from('cart')
+          .select()
+          .eq('user_id', userId)
+          .eq('product_id', product['id'])
+          .maybeSingle();
+
+      if (existing != null) {
+        // Already in cart - increase quantity
+        await supabase
+            .from('cart')
+            .update({'quantity': existing['quantity'] + 1})
+            .eq('id', existing['id']);
+      } else {
+        // New cart entry
+        await supabase.from('cart').insert({
+          'user_id': userId,
+          'product_id': product['id'],
+          'quantity': 1,
+        });
+      }
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${product['name']} added to cart 🛒'), duration: const Duration(seconds: 1)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add to cart: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +303,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                     width: double.infinity,
                     height: 34,
                     child: ElevatedButton(
-                      onPressed: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${product['name']} added to cart 🛒'), duration: const Duration(seconds: 1))),
+                      onPressed: () => _addToCart(product),
                       style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1a6b2e), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), padding: EdgeInsets.zero),
                       child: const Text('Add to cart', style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w600)),
                     ),
