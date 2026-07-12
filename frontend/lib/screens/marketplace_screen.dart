@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/product_data.dart';
-import '../utils/favorites_data.dart';
 import 'cart_screen.dart';
 import 'product_details_screen.dart';
 import 'login_screen.dart';
@@ -18,12 +17,68 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   final List<String> _filters = ['All', 'Vegetables', 'Grains', 'Fruits', 'Organic', 'Near me'];
   final supabase = Supabase.instance.client;
 
+  Set<dynamic> _favoriteProductIds = {};
+
   final List<Map<String, dynamic>> _deals = [
     {'name': 'Tomatoes', 'price': '₹35/kg', 'mrp': '₹50/kg', 'farmer': 'Ramesh, Guntur', 'emoji': '🍅', 'tag': '30% off', 'bg': const Color(0xFFFFF8E1)},
     {'name': 'Basmati Rice', 'price': '₹2,600/qt', 'mrp': '', 'farmer': 'Suresh, Vijayawada', 'emoji': '🌾', 'tag': 'Fresh stock', 'bg': const Color(0xFFE8F5E9)},
     {'name': 'Red Onions', 'price': '₹22/kg', 'mrp': '₹30/kg', 'farmer': 'Naresh, Anantapur', 'emoji': '🧅', 'tag': 'Bulk deal', 'bg': const Color(0xFFFCE4EC)},
     {'name': 'Potatoes', 'price': '₹28/kg', 'mrp': '₹35/kg', 'farmer': 'Mahesh, Kurnool', 'emoji': '🥔', 'tag': 'New', 'bg': const Color(0xFFE3F2FD)},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorites();
+  }
+
+  Future<void> _loadFavorites() async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return;
+
+    try {
+      final response = await supabase.from('favorites').select('product_id').eq('user_id', userId);
+      setState(() {
+        _favoriteProductIds = List<Map<String, dynamic>>.from(response).map((row) => row['product_id']).toSet();
+      });
+    } catch (e) {
+      debugPrint('Failed to load favorites: $e');
+    }
+  }
+
+  Future<void> _toggleFavorite(Map<String, dynamic> product) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please sign in to save favourites')),
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+      return;
+    }
+
+    final productId = product['id'];
+    final isFav = _favoriteProductIds.contains(productId);
+
+    try {
+      if (isFav) {
+        await supabase.from('favorites').delete().eq('user_id', userId).eq('product_id', productId);
+        setState(() => _favoriteProductIds.remove(productId));
+      } else {
+        await supabase.from('favorites').insert({'user_id': userId, 'product_id': productId});
+        setState(() => _favoriteProductIds.add(productId));
+      }
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(isFav ? 'Removed from favourites' : '${product['name']} added to favourites ❤️'), duration: const Duration(seconds: 1)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update favourites: $e')),
+      );
+    }
+  }
 
   Future<void> _addToCart(Map<String, dynamic> product) async {
     final userId = supabase.auth.currentUser?.id;
@@ -37,7 +92,6 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     }
 
     try {
-      // Check if this product is already in the user's cart
       final existing = await supabase
           .from('cart')
           .select()
@@ -46,13 +100,11 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           .maybeSingle();
 
       if (existing != null) {
-        // Already in cart - increase quantity
         await supabase
             .from('cart')
             .update({'quantity': existing['quantity'] + 1})
             .eq('id', existing['id']);
       } else {
-        // New cart entry
         await supabase.from('cart').insert({
           'user_id': userId,
           'product_id': product['id'],
@@ -237,7 +289,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   }
 
   Widget _productCard(BuildContext context, Map<String, dynamic> product) {
-    final isFav = FavoritesData.favoriteProducts.contains(product);
+    final isFav = _favoriteProductIds.contains(product['id']);
     return GestureDetector(
       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailsScreen(
         name: product['name'] ?? '',
@@ -269,13 +321,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                 Positioned(
                   top: 8, right: 8,
                   child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isFav) FavoritesData.favoriteProducts.remove(product);
-                        else FavoritesData.favoriteProducts.add(product);
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(isFav ? 'Removed from favourites' : '${product['name']} added to favourites ❤️'), duration: const Duration(seconds: 1)));
-                    },
+                    onTap: () => _toggleFavorite(product),
                     child: Container(
                       width: 30, height: 30,
                       decoration: BoxDecoration(color: Colors.white.withOpacity(0.9), shape: BoxShape.circle),
