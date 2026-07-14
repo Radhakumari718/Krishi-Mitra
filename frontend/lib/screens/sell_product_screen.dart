@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/product_data.dart';
 import '../utils/storage_service.dart';
 
@@ -19,12 +20,33 @@ class _SellProductScreenState extends State<SellProductScreen> {
   Uint8List? imageBytes;
   final picker = ImagePicker();
   bool isUploading = false;
+  final supabase = Supabase.instance.client;
 
   Future<void> pickImage() async {
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageBytes = await image.readAsBytes();
       setState(() {});
+    }
+  }
+
+  Future<String?> _uploadImage() async {
+    if (imageBytes == null) return null;
+
+    try {
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      await supabase.storage.from('product-images').uploadBinary(
+            fileName,
+            imageBytes!,
+            fileOptions: const FileOptions(contentType: 'image/jpeg'),
+          );
+
+      final publicUrl = supabase.storage.from('product-images').getPublicUrl(fileName);
+      return publicUrl;
+    } catch (e) {
+      debugPrint('Image upload failed: $e');
+      return null;
     }
   }
 
@@ -37,18 +59,20 @@ class _SellProductScreenState extends State<SellProductScreen> {
     setState(() => isUploading = true);
 
     try {
+      final imageUrl = await _uploadImage();
+
       await ProductData.addProduct({
         'name': cropController.text,
         'price': '₹${priceController.text}',
         'quantity': quantityController.text,
         'location': locationController.text,
         'farmer': farmerController.text,
-        'image_url': null, // image upload to Supabase Storage will be added later
+        'image_url': imageUrl,
       });
 
-      // keep local cache updated too
       await StorageService.saveProducts(ProductData.products);
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Product listed successfully 🌾'), backgroundColor: Color(0xFF1a6b2e)),
       );
@@ -60,11 +84,12 @@ class _SellProductScreenState extends State<SellProductScreen> {
       locationController.clear();
       setState(() => imageBytes = null);
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to list product: $e')),
       );
     } finally {
-      setState(() => isUploading = false);
+      if (mounted) setState(() => isUploading = false);
     }
   }
 
